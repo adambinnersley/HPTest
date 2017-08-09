@@ -376,7 +376,7 @@ class HazardPerception implements HPInterface{
                     $_SESSION['hptest'.$this->getTestID()][$questionNo]['score'] = intval($score);
                 }
                 if(!$secscore && $this->videoInfo['nohazards'] == 2 && $click >= $this->videoInfo['ten'] && $click <= $this->videoInfo['endseq2']){
-                    $secscore = $this->markHazard2($click);
+                    $secscore = $this->markHazard($click, 2);
                     $_SESSION['hptest'.$this->getTestID()]['second_score'] = intval($secscore);
                 }
             }
@@ -388,26 +388,12 @@ class HazardPerception implements HPInterface{
      * @param int $click The click location to score
      * @return int|boolean If the click scores any marks that score will be returned else will return false
      */
-    protected function markHazard($click){
-        if($click >= $this->videoInfo['five'] && $click < $this->videoInfo['four']){return 5;}
-        elseif($click >= $this->videoInfo['four'] && $click < $this->videoInfo['three']){return 4;}
-        elseif($click >= $this->videoInfo['three'] && $click < $this->videoInfo['two']){return 3;}
-        elseif($click >= $this->videoInfo['two'] && $click < $this->videoInfo['one']){return 2;}
-        elseif($click >= $this->videoInfo['one'] && $click <= $this->videoInfo['endseq']){return 1;}
-        return false;
-    }
-    
-    /**
-     * Returns the mark for the click location for the second hazard window if it exists
-     * @param int $click The click location to score
-     * @return int|boolean If the click scores any marks that score will be returned else will return false
-     */
-    protected function markHazard2($click){
-        if($click >= $this->videoInfo['ten'] && $click < $this->videoInfo['nine']){return 5;}
-        elseif($click >= $this->videoInfo['nine'] && $click < $this->videoInfo['eight']){return 4;}
-        elseif($click >= $this->videoInfo['eight'] && $click < $this->videoInfo['seven']){return 3;}
-        elseif($click >= $this->videoInfo['seven'] && $click < $this->videoInfo['six']){return 2;}
-        elseif($click >= $this->videoInfo['six'] && $click <= $this->videoInfo['endseq2']){return 1;}
+    protected function markHazard($click, $window = 1){
+        if($click >= $this->videoInfo[($window === 1 ? 'five' : 'ten')] && $click < $this->videoInfo[($window === 1 ? 'four' : 'nine')]){return 5;}
+        elseif($click >= $this->videoInfo[($window === 1 ? 'four' : 'nine')] && $click < $this->videoInfo[($window === 1 ? 'three' : 'eight')]){return 4;}
+        elseif($click >= $this->videoInfo[($window === 1 ? 'three' : 'eight')] && $click < $this->videoInfo[($window === 1 ? 'two' : 'seven')]){return 3;}
+        elseif($click >= $this->videoInfo[($window === 1 ? 'two' : 'seven')] && $click < $this->videoInfo[($window === 1 ? 'one' : 'six')]){return 2;}
+        elseif($click >= $this->videoInfo[($window === 1 ? 'one' : 'six')] && $click <= $this->videoInfo['endseq'.($window === 1 ? '' : '2')]){return 1;}
         return false;
     }
     
