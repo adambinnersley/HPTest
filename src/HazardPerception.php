@@ -294,7 +294,7 @@ class HazardPerception implements HPInterface{
     /**
      * Returns the title for the video
      * @param int $videoID This should be the ID of the video you are getting the information for
-     * @return boolean|string If information exists with will be returned as a string else will return false
+     * @return string|false If information exists with will be returned as a string else will return false
      */
     protected function getVideoName($videoID){
         $this->getVideoInfo($videoID);
@@ -401,7 +401,7 @@ class HazardPerception implements HPInterface{
      * Creates the HTML code for the current test
      * @param int $prim This should be the prim number of the first question
      * @param boolean $review If the user is in the review section should be set to true else should be false
-     * @return string|boolean Returns the HTML code and question number as a JSON encoded string if that prim number exists else return false
+     * @return string|false Returns the HTML code and question number as a JSON encoded string if that prim number exists else return false
      */
     public function createHTML($prim, $review = false){
         $this->report = $review;
@@ -526,7 +526,7 @@ class HazardPerception implements HPInterface{
     /**
      * Checks to see if the ant cheat was activated to the given video ID
      * @param int $prim This should be the video ID
-     * @return string|boolean If the anti-cheat was activated a string of HTML code will be returned else will return false
+     * @return string|false If the anti-cheat was activated a string of HTML code will be returned else will return false
      */
     protected function anyCheating($prim){
         $clipNo = $this->currentVideoNo($prim);
