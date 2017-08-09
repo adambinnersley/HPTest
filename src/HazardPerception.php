@@ -92,7 +92,7 @@ class HazardPerception implements HPInterface{
      */
     protected function chooseVideos($testNo){
         $videos = self::$db->selectAll($this->getVideoTable(), array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
-        if($this->report == false){
+        if($this->report === false){
             unset($_SESSION['hptest'.$testNo]);
             self::$db->delete($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()));
         }
@@ -310,7 +310,7 @@ class HazardPerception implements HPInterface{
      * @return string Returns the HTML code as a string for the given video
      */
     private function getVideo($videoID){
-        if($this->report == false){
+        if($this->report === false){
             $width = 768;
             $height = 576;
         }
@@ -328,7 +328,7 @@ class HazardPerception implements HPInterface{
      * @return string Returns the required JavaScript files as a HTML code string ready to be output
      */
     protected function getScript(){
-        if($this->report == false){return '<script type="text/javascript" src="/js/theory/hazard-perception-hazupdate.js"></script>';}
+        if($this->report === false){return '<script type="text/javascript" src="/js/theory/hazard-perception-hazupdate.js"></script>';}
         else{return '<script type="text/javascript" src="/js/theory/hazard-report-hazupdate.js"></script>';}
     }
     
@@ -436,7 +436,7 @@ class HazardPerception implements HPInterface{
             self::$template->assign('script', $this->getScript());
             self::$template->assign('testID', $this->getTestID());
             
-            if($this->report == false){$this->videodata = self::$template->fetch('hazlayout.tpl');}else{$this->videodata = self::$template->fetch('hazlayoutreport.tpl');}
+            if($this->report === false){$this->videodata = self::$template->fetch('hazlayout.tpl');}else{$this->videodata = self::$template->fetch('hazlayoutreport.tpl');}
             return json_encode(array('html' => $this->videodata, 'questionnum' => $this->currentVideoNo($prim)));
         }
         return false;
@@ -573,7 +573,7 @@ class HazardPerception implements HPInterface{
         self::$template->assign('question_no', $this->currentVideoNo($prim));
         self::$template->assign('no_questions', $this->numVideos);
         self::$template->assign('video_data', $this->videodata);
-        if($this->report == false){return self::$template->fetch('hazardtest.tpl');}else{return self::$template->fetch('hazardtestreport.tpl');}
+        if($this->report === false){return self::$template->fetch('hazardtest.tpl');}else{return self::$template->fetch('hazardtestreport.tpl');}
     }
     
     /**
@@ -605,7 +605,7 @@ class HazardPerception implements HPInterface{
      * @return string Returns the end test report HTML ready to be rendered
      */
     public function endTest($mark){
-        if($mark == true){
+        if($mark === true){
             $this->getUserProgress($this->getTestID());
             for($i = 1; $i <= $this->numVideos; $i++){
                 $this->markVideo($_SESSION['hptest'.$this->getTestID()]['videos'][$i]);
@@ -645,7 +645,7 @@ class HazardPerception implements HPInterface{
             if(intval($_SESSION['hptest'.$this->getTestID()][$i]['score']) == '-2'){$videos[$i]['status'] = 'Skipped';}
             elseif(intval($_SESSION['hptest'.$this->getTestID()][$i]['score']) == '-1'){$videos[$i]['status'] = 'Cheat';}
         }
-        if($mark == true){
+        if($mark === true){
             if($score >= $this->getPassmark()){$this->status = 1;}else{$this->status = 2;}
             $_SESSION['hptest'.$this->getTestID()]['totalscore'] = $score;
             $this->addResultsToDB();
