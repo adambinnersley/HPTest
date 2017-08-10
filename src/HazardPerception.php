@@ -52,7 +52,7 @@ class HazardPerception implements HPInterface{
      * Creates the hazard perception test HTML code
      * @param int $testNo This should be the test number
      * @param boolean $report If you are generating the report for the test should be true else should be false
-     * @param int|boolean $prim The prim number to start the report on, if not in a report should be false
+     * @param int|false $prim The prim number to start the report on, if not in a report should be false
      * @return string Returns the HTML code for the current HTML test
      */
     public function createTest($testNo = 1, $report = false, $prim = false){
