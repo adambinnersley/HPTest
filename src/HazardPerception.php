@@ -116,7 +116,7 @@ class HazardPerception implements HPInterface{
      * @param int $testID This should be the current test ID
      */
     public function setTestID($testID){
-        if(is_numeric($testID)){
+        if(is_int($testID)){
             $this->testID = $testID;
         }
         return $this;
@@ -136,7 +136,7 @@ class HazardPerception implements HPInterface{
      * @return $this
      */
     public function setPassmark($passmark){
-        if(is_numeric($passmark)){
+        if(is_int($passmark)){
             $this->passmark = $passmark;
         }
         return $this;
@@ -457,7 +457,7 @@ class HazardPerception implements HPInterface{
             $pre1 = '<div id="pre1" style="margin-left:'.$margin1.'%;width:'.$prewidth.'%"></div>';
             $marginleft = 0;
         }
-        else{$marginleft = (($this->videoInfo['five'] / $this->videoInfo['endClip']) * 100);}
+        else{$marginleft = (($this->videoInfo['five'] / $this->videoInfo['endClip']) * 100);$pre1 = '';}
         $five = $this->dec(($this->videoInfo['four'] - $this->videoInfo['five']) * $widthperc);
         $four = $this->dec(($this->videoInfo['three'] - $this->videoInfo['four']) * $widthperc);
         $three = $this->dec(($this->videoInfo['two'] - $this->videoInfo['three']) * $widthperc);
@@ -480,7 +480,7 @@ class HazardPerception implements HPInterface{
                 $pre2 = '<div id="pre2" style="margin-left:'.$margin1.'%;width:'.$prewidth.'%"></div>';
                 $extramargin = 0;
             }
-            else{$extramargin = $this->dec((($this->videoInfo['ten'] / $this->videoInfo['endClip']) - ($this->videoInfo['endseq'] / $this->videoInfo['endClip'])) * 100);}
+            else{$extramargin = $this->dec((($this->videoInfo['ten'] / $this->videoInfo['endClip']) - ($this->videoInfo['endseq'] / $this->videoInfo['endClip'])) * 100);$pre2 = '';}
             $ten = $this->dec(($this->videoInfo['nine'] - $this->videoInfo['ten']) * $widthperc);
             $nine = $this->dec(($this->videoInfo['eight'] - $this->videoInfo['nine']) * $widthperc);
             $eight = $this->dec(($this->videoInfo['seven'] - $this->videoInfo['eight']) * $widthperc);
@@ -499,6 +499,7 @@ class HazardPerception implements HPInterface{
     protected function getReviewFlags($videoID){
         $questionNo = $this->currentVideoNo($videoID);
         $clicks = unserialize($_SESSION['hptest'.$this->getTestID()][$questionNo]['clicks']);
+        $flags = '';
         if(is_array($clicks)){
             foreach($clicks as $i => $click){
                 $marginleft = ((($click / $this->videoInfo['endClip']) * 100) - 0.4);
@@ -549,7 +550,7 @@ class HazardPerception implements HPInterface{
     
     /**
      * Builds the test and sets the required template values
-     * @param int $prim The prim number normally for the first question in the test
+     * @param int|false $prim The prim number normally for the first question in the test
      * @return string Returns the Hazard Perception Test HTML code
      */
     protected function buildTest($prim = false){
