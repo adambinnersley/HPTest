@@ -610,7 +610,7 @@ class HazardPerception implements HPInterface{
         for($i = 1; $i <= $this->numVideos; $i++){
             $videoID = $_SESSION['hptest'.$this->getTestID()]['videos'][$i];
             $info = $this->getVideoInfo($videoID);
-            $scoreInfo = $this->videoScore($i, $info);
+            $scoreInfo = $this->videoScore($i, $info['nohazards']);
             $videos[$i]['id'] = $videoID;
             $videos[$i]['no'] = $i;
             $videos[$i]['description'] = $info['title'];
@@ -632,12 +632,12 @@ class HazardPerception implements HPInterface{
         return self::$template->fetch('hazresult.tpl');
     }
     
-    protected function videoScore($i, $info){
+    protected function videoScore($i, $hazards){
         $videos = array();
         $first_score = intval($_SESSION['hptest'.$this->getTestID()][$i]['score']);
-        if($info['nohazards'] == 1){
+        if($hazards == 1){
             $videos['text_score'] = ($first_score < 0 ? 0 : $first_score);
-            $videos['score'] = $videos['score'];
+            $videos['score'] = $videos['text_score'];
         }
         else{
             if($first_score < 0){
