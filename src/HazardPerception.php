@@ -34,6 +34,11 @@ class HazardPerception implements HPInterface{
     
     protected $userType = 'account';
     protected $testType = 'CAR';
+    
+    protected $windows = array(
+        1 => array('five', 'four', 'three', 'two', 'one', 'endseq', 'prehazard'),
+        2 => array('ten', 'nine', 'eight', 'seven', 'six', 'endseq2', 'prehazard2')
+    );
 
     /**
      * Sets the required variables for the test to be rendered
@@ -391,15 +396,11 @@ class HazardPerception implements HPInterface{
      * @return int|boolean If the click scores any marks that score will be returned else will return false
      */
     protected function markHazard($click, $winNo = 1){
-        $window = array(
-            1 => array('five', 'four', 'three', 'two', 'one', 'endseq'),
-            2 => array('ten', 'nine', 'eight', 'seven', 'six', 'endseq2')
-        );
-        if($click >= $this->videoInfo[$window[$winNo][0]] && $click < $this->videoInfo[$window[$winNo][1]]){return 5;}
-        elseif($click >= $this->videoInfo[$window[$winNo][1]] && $click < $this->videoInfo[$window[$winNo][2]]){return 4;}
-        elseif($click >= $this->videoInfo[$window[$winNo][2]] && $click < $this->videoInfo[$window[$winNo][3]]){return 3;}
-        elseif($click >= $this->videoInfo[$window[$winNo][3]] && $click < $this->videoInfo[$window[$winNo][4]]){return 2;}
-        elseif($click >= $this->videoInfo[$window[$winNo][4]] && $click <= $this->videoInfo[$window[$winNo][5]]){return 1;}
+        $score = 5;
+        for($h = 0; $h <= 4; $h++){
+            if($click >= $this->videoInfo[$this->windows[$winNo][$h]] && $click < $this->videoInfo[$this->windows[$winNo][($h + 1)]]){return $score;}
+            $score--;
+        }
         return false;
     }
     
@@ -423,7 +424,7 @@ class HazardPerception implements HPInterface{
             self::$template->assign('video', $this->getVideo($prim));
             self::$template->assign('prev_question', $this->prevVideo($prim));
             self::$template->assign('next_question', $this->nextVideo($prim));
-            self::$template->assign('score_window', $this->getScoreWindows());
+            self::$template->assign('score_window', $this->buildScoreWindow());
             self::$template->assign('review_flags', $this->getReviewFlags($prim));
             self::$template->assign('script', $this->getScript());
             self::$template->assign('testID', $this->getTestID());
@@ -453,48 +454,28 @@ class HazardPerception implements HPInterface{
     
     /**
      * Returns the score window HTML code ready to be displayed
-     * @return string Returns the first score window HTML code
+     * @param int $winNo The score window number for the hazards i.e. 1st or 2nd hazard
+     * @return string Returns the score window HTML code
      */
-    private function getScoreWindows(){
+    public function buildScoreWindow($winNo = 1){
         $widthperc = (100 / $this->videoInfo['endClip']);
-        if($this->videoInfo['prehazard'] != NULL){
-            $margin1 = $this->dec(($this->videoInfo['prehazard'] / $this->videoInfo['endClip']) * 100);
-            $prewidth = $this->dec(($this->videoInfo['five'] - $this->videoInfo['prehazard']) * $widthperc);
-            $pre1 = '<div id="pre1" style="margin-left:'.$margin1.'%;width:'.$prewidth.'%"></div>';
+        if($this->videoInfo[$this->windows[$winNo][6]] != NULL){
+            $margin1 = ($winNo === 1 ? $this->dec(($this->videoInfo[$this->windows[$winNo][6]] / $this->videoInfo['endClip']) * 100) : $this->dec((($this->videoInfo[$this->windows[$winNo][6]] / $this->videoInfo['endClip']) - ($this->videoInfo[$this->windows[1][5]] / $this->videoInfo['endClip'])) * 100));
+            $prewidth = $this->dec(($this->videoInfo[$this->windows[$winNo][0]] - $this->videoInfo[$this->windows[$winNo][6]]) * $widthperc);
+            $pre = '<div id="pre'.$winNo.'" style="margin-left:'.$margin1.'%;width:'.$prewidth.'%"></div>';
             $marginleft = 0;
         }
-        else{$marginleft = (($this->videoInfo['five'] / $this->videoInfo['endClip']) * 100);$pre1 = '';}
-        $five = $this->dec(($this->videoInfo['four'] - $this->videoInfo['five']) * $widthperc);
-        $four = $this->dec(($this->videoInfo['three'] - $this->videoInfo['four']) * $widthperc);
-        $three = $this->dec(($this->videoInfo['two'] - $this->videoInfo['three']) * $widthperc);
-        $two = $this->dec(($this->videoInfo['one'] - $this->videoInfo['two']) * $widthperc);
-        $one = $this->dec(($this->videoInfo['endseq'] - $this->videoInfo['one']) * $widthperc);
-        
-        return $pre1.'<div id="five" style="margin-left:'.$marginleft.'%;width:'.$five.'%" data-score="'.$this->videoInfo['five'].'"></div><div id="four" style="width:'.$four.'%" data-score="'.$this->videoInfo['four'].'"></div><div id="three" style="width:'.$three.'%" data-score="'.$this->videoInfo['three'].'"></div><div id="two" style="width:'.$two.'%" data-score="'.$this->videoInfo['two'].'"></div><div id="one" style="width:'.$one.'%" data-score="'.$this->videoInfo['one'].'" data-scoreend="'.$this->videoInfo['endseq'].'"></div>'.$this->getSecondScoreWindow($widthperc);
-    }
-    
-    /**
-     * Returns the second score window HTML code ready to be displayed
-     * @param int Should be the width of the time to work out the positioning of the score windows
-     * @return string Returns the second score window HTML code
-     */
-    private function getSecondScoreWindow($widthperc){
-        if($this->videoInfo['nohazards'] == 2){
-            if($this->videoInfo['prehazard2'] != NULL){
-                $margin1 = $this->dec((($this->videoInfo['prehazard2'] / $this->videoInfo['endClip']) - ($this->videoInfo['endseq'] / $this->videoInfo['endClip'])) * 100);
-                $prewidth = $this->dec(($this->videoInfo['ten'] - $this->videoInfo['prehazard2']) * $widthperc);
-                $pre2 = '<div id="pre2" style="margin-left:'.$margin1.'%;width:'.$prewidth.'%"></div>';
-                $extramargin = 0;
-            }
-            else{$extramargin = $this->dec((($this->videoInfo['ten'] / $this->videoInfo['endClip']) - ($this->videoInfo['endseq'] / $this->videoInfo['endClip'])) * 100);$pre2 = '';}
-            $ten = $this->dec(($this->videoInfo['nine'] - $this->videoInfo['ten']) * $widthperc);
-            $nine = $this->dec(($this->videoInfo['eight'] - $this->videoInfo['nine']) * $widthperc);
-            $eight = $this->dec(($this->videoInfo['seven'] - $this->videoInfo['eight']) * $widthperc);
-            $seven = $this->dec(($this->videoInfo['six'] - $this->videoInfo['seven']) * $widthperc);
-            $six = $this->dec(($this->videoInfo['endseq2'] - $this->videoInfo['six']) * $widthperc);
-            return $pre2.'<div id="ten" style="margin-left:'.$extramargin.'%;width:'.$ten.'%" data-score="'.$this->videoInfo['ten'].'"></div><div id="nine" style="width:'.$nine.'%" data-score="'.$this->videoInfo['nine'].'"></div><div id="eight" style="width:'.$eight.'%" data-score="'.$this->videoInfo['eight'].'"></div><div id="seven" style="width:'.$seven.'%" data-score="'.$this->videoInfo['seven'].'"></div><div id="six" style="width:'.$six.'%" data-score="'.$this->videoInfo['six'].'" data-scoreend="'.$this->videoInfo['endseq2'].'"></div>';
+        else{
+            $marginleft = ($winNo === 1 ? (($this->videoInfo[$this->windows[$winNo][0]] / $this->videoInfo['endClip']) * 100) : $this->dec((($this->videoInfo[$this->windows[$winNo][0]] / $this->videoInfo['endClip']) - ($this->videoInfo[$this->windows[1][5]] / $this->videoInfo['endClip'])) * 100));
+            $pre = '';
         }
-        return false;
+        for($v = 0; $v <= 4; $v++){
+            $pre.= '<div id="'.$this->windows[$winNo][0].'" style="'.($v === 0 ? 'margin-left:'.$marginleft.'%;' : '').'width:'.$this->dec(($this->videoInfo[$this->windows[$winNo][($v+1)]] - $this->videoInfo[$this->windows[$winNo][$v]]) * $widthperc).'%" data-score="'.$this->videoInfo[$this->windows[$winNo][0]].'">';
+        }
+        if($winNo === 1 && $this->videoInfo['nohazards'] == 2){
+            $pre.= $this->buildScoreWindow(2);
+        }
+        return $pre;
     }
     
     /**
@@ -665,7 +646,7 @@ class HazardPerception implements HPInterface{
     
     /**
      * returns the status of the video if there is one else returns false
-     * @param int $score This should be the score assignes to the first score window
+     * @param int $score This should be the score assigns to the first score window
      * @return boolean|string
      */
     protected function videoStatus($score){
