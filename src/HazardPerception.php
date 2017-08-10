@@ -625,7 +625,7 @@ class HazardPerception implements HPInterface{
                     $score2 = 0;
                 }
                 else{
-                    $score1 = $score1;
+                    $score1 = $first_score;
                     $score2 = intval($_SESSION['hptest'.$this->getTestID()]['second_score']);
                 }
                 $videos[$i]['score'] = $score1.' + '.$score2;
