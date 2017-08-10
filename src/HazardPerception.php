@@ -116,9 +116,7 @@ class HazardPerception implements HPInterface{
      * @param int $testID This should be the current test ID
      */
     public function setTestID($testID){
-        if(is_int($testID)){
-            $this->testID = $testID;
-        }
+        $this->testID = intval($testID);
         return $this;
     }
     
@@ -136,9 +134,7 @@ class HazardPerception implements HPInterface{
      * @return $this
      */
     public function setPassmark($passmark){
-        if(is_int($passmark)){
-            $this->passmark = $passmark;
-        }
+        $this->passmark = intval($passmark);
         return $this;
     }
     
@@ -261,7 +257,7 @@ class HazardPerception implements HPInterface{
         $nextID = ($this->currentVideoNo($videoID) + 1);
         if($nextID <= 14){$vidID = $_SESSION['hptest'.$this->getTestID()]['videos'][$nextID];}
         else{$vidID = 'none';}
-        if($_GET['review']){
+        if(filter_input(INPUT_GET, 'review')){
             return '<div id="'.$vidID.'" class="nextvideo"><span class="sr-only">Skip Clip</span></div>';
         }
         else{
