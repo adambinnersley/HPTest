@@ -610,32 +610,14 @@ class HazardPerception implements HPInterface{
         for($i = 1; $i <= $this->numVideos; $i++){
             $videoID = $_SESSION['hptest'.$this->getTestID()]['videos'][$i];
             $info = $this->getVideoInfo($videoID);
+            $scoreInfo = $this->videoScore($i, $info);
             $videos[$i]['id'] = $videoID;
             $videos[$i]['no'] = $i;
             $videos[$i]['description'] = $info['title'];
-            $first_score = intval($_SESSION['hptest'.$this->getTestID()][$i]['score']);
-            if($info['nohazards'] == 1){
-                $videos[$i]['score'] = ($first_score < 0 ? 0 : $first_score);
-                $score = $score + $videos[$i]['score'];
-                $windows[$videos[$i]['score']]++;
-            }
-            else{
-                if($first_score < 0){
-                    $score1 = 0;
-                    $score2 = 0;
-                }
-                else{
-                    $score1 = $first_score;
-                    $score2 = intval($_SESSION['hptest'.$this->getTestID()]['second_score']);
-                }
-                $videos[$i]['score'] = $score1.' + '.$score2;
-                $score = $score + $score1 + $score2;
-                $windows[$score1]++;
-                $windows[$score2]++;
-            }
-            
-            if($first_score == '-2'){$videos[$i]['status'] = 'Skipped';}
-            elseif($first_score == '-1'){$videos[$i]['status'] = 'Cheat';}
+            $videos[$i]['score'] = $scoreInfo['text_score'];
+            $windows[$scoreInfo['score']]++;
+            if($scoreInfo['second_score']){$windows[$scoreInfo['second_score']]++;}
+            $score = $score + intval($scoreInfo['score']) + intval($scoreInfo['second_score']);
         }
         if($mark === true){
             if($score >= $this->getPassmark()){$this->status = 1;}else{$this->status = 2;}
@@ -650,6 +632,36 @@ class HazardPerception implements HPInterface{
         return self::$template->fetch('hazresult.tpl');
     }
     
+    protected function videoScore($i, $info){
+        $videos = array();
+        $first_score = intval($_SESSION['hptest'.$this->getTestID()][$i]['score']);
+        if($info['nohazards'] == 1){
+            $videos['text_score'] = ($first_score < 0 ? 0 : $first_score);
+            $videos['score'] = $videos['score'];
+        }
+        else{
+            if($first_score < 0){
+                $score1 = 0;
+                $score2 = 0;
+            }
+            else{
+                $score1 = $first_score;
+                $score2 = intval($_SESSION['hptest'.$this->getTestID()]['second_score']);
+            }
+            $videos['text_score'] = $score1.' + '.$score2;
+            $videos['score'] = $score1;
+            $videos['second_score'] = $score2;
+        }
+        $videos['status'] = $this->videoStatus($first_score);
+        return $videos;
+    }
+    
+    protected function videoStatus($score){
+        if($score == '-2'){return 'Skipped';}
+        elseif($score == '-1'){return 'Cheat';}
+        return false;
+    }
+
     /**
      * Inserts the users results into the database
      */
