@@ -75,14 +75,18 @@ class HazardPerception implements HPInterface{
      * @return array Returns the users test progress as an array
      */
     public function getUserProgress($testID){
-        if($_SESSION['hptest'.$this->getTestID()]){
-            return $_SESSION['hptest'.$this->getTestID()];
+        if($this->getSessionInfo()){
+            return $this->getSessionInfo();
         }
         else{
             $userProgress = self::$db->select($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()));
             $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
-            return $_SESSION['hptest'.$this->getTestID()];
+            return $this->getSessionInfo();
         }
+    }
+    
+    public function getSessionInfo($testNo = false){
+        return $_SESSION['hptest'.$this->getTestID()];
     }
     
     /**
@@ -243,7 +247,7 @@ class HazardPerception implements HPInterface{
      */
     protected function prevVideo($videoID){
         $prevID = ($this->currentVideoNo($videoID) - 1);
-        if($prevID >= 1){$vidID = $_SESSION['hptest'.$this->getTestID()]['videos'][$prevID];}
+        if($prevID >= 1){$vidID = $this->getSessionInfo()['videos'][$prevID];}
         else{$vidID = 'none';}
         return '<div id="'.$vidID.'" class="prevvideo"><span>Prev Clip</span></div>';
     }
@@ -255,7 +259,7 @@ class HazardPerception implements HPInterface{
      */
     protected function nextVideo($videoID){
         $nextID = ($this->currentVideoNo($videoID) + 1);
-        if($nextID <= 14){$vidID = $_SESSION['hptest'.$this->getTestID()]['videos'][$nextID];}
+        if($nextID <= 14){$vidID = $this->getSessionInfo()['videos'][$nextID];}
         else{$vidID = 'none';}
         if(filter_input(INPUT_GET, 'review')){
             return '<div id="'.$vidID.'" class="nextvideo"><span class="sr-only">Skip Clip</span></div>';
@@ -271,7 +275,7 @@ class HazardPerception implements HPInterface{
      * @return int|boolean Returns the current video id if progress exists else returns false
      */
     protected function currentVideoNo($videoID){
-        foreach($_SESSION['hptest'.$this->getTestID()]['videos'] as $number => $value){
+        foreach($this->getSessionInfo()['videos'] as $number => $value){
             if($value == $videoID){return intval($number);}
         }
         return false;
@@ -337,7 +341,7 @@ class HazardPerception implements HPInterface{
     public function addFlag($clickTime, $videoID){
         $this->getUserProgress($this->getTestID());
         $questionNo = $this->currentVideoNo($videoID);
-        $clicks = unserialize($_SESSION['hptest'.$this->getTestID()][$questionNo]['clicks']);
+        $clicks = unserialize($this->getSessionInfo()[$questionNo]['clicks']);
         $clicks[] = $clickTime;
         $_SESSION['hptest'.$this->getTestID()][$questionNo]['clicks'] = serialize(array_filter($clicks));
     }
@@ -362,8 +366,8 @@ class HazardPerception implements HPInterface{
         $this->getVideoInfo($videoID);
         $this->getUserProgress($this->getTestID());
         $questionNo = $this->currentVideoNo($videoID);
-        if($_SESSION['hptest'.$this->getTestID()][$questionNo]['score'] >= 0){
-            $clicks = unserialize($_SESSION['hptest'.$this->getTestID()][$questionNo]['clicks']);
+        if($this->getSessionInfo()[$questionNo]['score'] >= 0){
+            $clicks = unserialize($this->getSessionInfo()[$questionNo]['clicks']);
             $score = false;
             $secscore = false;
             foreach($clicks as $click){
@@ -499,7 +503,7 @@ class HazardPerception implements HPInterface{
      */
     protected function getReviewFlags($videoID){
         $questionNo = $this->currentVideoNo($videoID);
-        $clicks = unserialize($_SESSION['hptest'.$this->getTestID()][$questionNo]['clicks']);
+        $clicks = unserialize($this->getSessionInfo()[$questionNo]['clicks']);
         $flags = '';
         if(is_array($clicks)){
             foreach($clicks as $i => $click){
@@ -519,10 +523,10 @@ class HazardPerception implements HPInterface{
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
         $vidInfo = $this->getVideoInfo($prim);
-        if($_SESSION['hptest'.$this->getTestID()][$clipNo]['score'] < 0){$score = 0;}
-        else{$score = $_SESSION['hptest'.$this->getTestID()][$clipNo]['score'];}
+        if($this->getSessionInfo()[$clipNo]['score'] < 0){$score = 0;}
+        else{$score = $this->getSessionInfo()[$clipNo]['score'];}
         if($vidInfo['nohazards'] == 1){return '<div class="yourscore">You scored '.intval($score).' for this hazard</div>';}
-        else{return '<div class="yourscore">You scored '.intval($score).' for the first hazard and '.intval($_SESSION['hptest'.$this->getTestID()]['second_score']).' for the second hazard</div>';}
+        else{return '<div class="yourscore">You scored '.intval($score).' for the first hazard and '.intval($this->getSessionInfo()['second_score']).' for the second hazard</div>';}
     }
     
     /**
@@ -533,7 +537,7 @@ class HazardPerception implements HPInterface{
     protected function anyCheating($prim){
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
-        if($_SESSION['hptest'.$this->getTestID()][$clipNo]['score'] == -1){return '<div id="anticheat">Anti-Cheat Activated</div>';}
+        if($this->getSessionInfo()[$clipNo]['score'] == -1){return '<div id="anticheat">Anti-Cheat Activated</div>';}
         else{return false;}
     }
     
@@ -596,7 +600,7 @@ class HazardPerception implements HPInterface{
         $this->getUserProgress($this->getTestID());
         if($mark === true){
             for($i = 1; $i <= $this->numVideos; $i++){
-                $this->markVideo($_SESSION['hptest'.$this->getTestID()]['videos'][$i]);
+                $this->markVideo($this->getSessionInfo()['videos'][$i]);
             }
             $this->userprogress = false;
         }
@@ -604,7 +608,7 @@ class HazardPerception implements HPInterface{
         $windows = array();
         $videos = array();
         for($i = 1; $i <= $this->numVideos; $i++){
-            $videoID = $_SESSION['hptest'.$this->getTestID()]['videos'][$i];
+            $videoID = $this->getSessionInfo()['videos'][$i];
             $info = $this->getVideoInfo($videoID);
             $scoreInfo = $this->videoScore($i, $info['nohazards']);
             $videos[$i]['id'] = $videoID;
@@ -617,7 +621,7 @@ class HazardPerception implements HPInterface{
         }
         if($mark === true){
             if($score >= $this->getPassmark()){$this->status = 1;}else{$this->status = 2;}
-            $_SESSION['hptest'.$this->getTestID()]['totalscore'] = $score;
+            $this->getSessionInfo()['totalscore'] = $score;
             $this->addResultsToDB();
         }
         self::$template->assign('windows', $windows);
@@ -630,7 +634,7 @@ class HazardPerception implements HPInterface{
     
     protected function videoScore($i, $hazards){
         $videos = array();
-        $first_score = intval($_SESSION['hptest'.$this->getTestID()][$i]['score']);
+        $first_score = intval($this->getSessionInfo()[$i]['score']);
         if($hazards == 1){
             $videos['text_score'] = ($first_score < 0 ? 0 : $first_score);
             $videos['score'] = $videos['text_score'];
@@ -642,7 +646,7 @@ class HazardPerception implements HPInterface{
             }
             else{
                 $score1 = $first_score;
-                $score2 = intval($_SESSION['hptest'.$this->getTestID()]['second_score']);
+                $score2 = intval($this->getSessionInfo()['second_score']);
             }
             $videos['text_score'] = $score1.' + '.$score2;
             $videos['score'] = $score1;
@@ -663,6 +667,6 @@ class HazardPerception implements HPInterface{
      */
     protected function addResultsToDB(){
         self::$db->delete($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType())); // Delete old tests
-        self::$db->insert($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($_SESSION['hptest'.$this->getTestID()]), 'test_type' => $this->getTestType(), 'status' => $this->status));
+        self::$db->insert($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status));
     }
 }
