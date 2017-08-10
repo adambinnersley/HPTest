@@ -316,17 +316,8 @@ class HazardPerception implements HPInterface{
      * @return string Returns the HTML code as a string for the given video
      */
     private function getVideo($videoID){
-        if($this->report === false){
-            $width = 768;
-            $height = 576;
-        }
-        else{
-            $width = 544;
-            $height = 408;
-        }
         $videoName = $this->getVideoName($videoID);
-        
-        return '<div id="video_overlay"><div id="icon"><img src="/images/hloading.gif" alt="Loading" width="100" height="100" /></div></div><video width="'.$width.'" height="'.$height.'" id="video" class="video" data-duration="'.$this->videoInfo['endClip'].'" preload="auto" muted playsinline webkit-playsinline><source src="'.$this->videoLocation.'mp4/'.$videoName.'.mp4" type="video/mp4" /><source src="'.$this->videoLocation.'ogv/'.$videoName.'.ogv" type="video/ogg" /></video>';
+        return '<div id="video_overlay"><div id="icon"><img src="/images/hloading.gif" alt="Loading" width="100" height="100" /></div></div><video width="544" height="408" id="video" class="video" data-duration="'.$this->videoInfo['endClip'].'" preload="auto" muted playsinline webkit-playsinline><source src="'.$this->videoLocation.'mp4/'.$videoName.'.mp4" type="video/mp4" /><source src="'.$this->videoLocation.'ogv/'.$videoName.'.ogv" type="video/ogg" /></video>';
     }
     
     /**
@@ -360,7 +351,7 @@ class HazardPerception implements HPInterface{
     public function cheatDetected($videoID, $score){
         $questionNo = $this->currentVideoNo($videoID);
         $_SESSION['hptest'.$this->getTestID()][$questionNo]['score'] = $score;
-        if($score == -2){$_SESSION['hptest'.$this->getTestID()][$questionNo]['clicks'] = NULL;}
+        $this->addFlag(false, $videoID);
     }
     
     /**
@@ -484,8 +475,7 @@ class HazardPerception implements HPInterface{
      * @return string This should be the flay with the styling added to the HTML code
      */
     protected function getReviewFlags($videoID){
-        $questionNo = $this->currentVideoNo($videoID);
-        $clicks = unserialize($this->getSessionInfo()[$questionNo]['clicks']);
+        $clicks = unserialize($this->getSessionInfo()[$this->currentVideoNo($videoID)]['clicks']);
         $flags = '';
         if(is_array($clicks)){
             foreach($clicks as $i => $click){
@@ -520,7 +510,7 @@ class HazardPerception implements HPInterface{
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
         if($this->getSessionInfo()[$clipNo]['score'] == -1){return '<div id="anticheat">Anti-Cheat Activated</div>';}
-        else{return false;}
+        return false;
     }
     
     /**
