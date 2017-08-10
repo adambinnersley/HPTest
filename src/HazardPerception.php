@@ -402,13 +402,6 @@ class HazardPerception implements HPInterface{
         return false;
     }
     
-    protected function checkWindow($click, $start, $end){
-        if($click >= $this->videoInfo[$start] && $click < $this->videoInfo[$end]){
-            return true;
-        }
-        return false;
-    }
-    
     /**
      * Creates the HTML code for the current test
      * @param int $prim This should be the prim number of the first question
