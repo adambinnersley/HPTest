@@ -331,7 +331,7 @@ class HazardPerception implements HPInterface{
     
     /**
      * Adds a flag at a given point on the Hazard Test
-     * @param int $clickTime The time the click was made
+     * @param int|false $clickTime The time the click was made or false if anti-cheat activated
      * @param int $videoID The ID of the video where the click is being added to
      * @return void Nothing is returned
      */
