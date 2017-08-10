@@ -302,10 +302,7 @@ class HazardPerception implements HPInterface{
      */
     protected function getVideoName($videoID){
         $this->getVideoInfo($videoID);
-        if($this->videoInfo['reference']){
-            return strtolower($this->videoInfo['reference']);
-        }
-        return false;
+        return strtolower($this->videoInfo['reference']);
     }
     
     /**
