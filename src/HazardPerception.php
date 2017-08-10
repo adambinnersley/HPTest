@@ -85,6 +85,10 @@ class HazardPerception implements HPInterface{
         }
     }
     
+    /**
+     * Retrieves the test information from the current session
+     * @return array
+     */
     public function getSessionInfo(){
         return $_SESSION['hptest'.$this->getTestID()];
     }
@@ -632,6 +636,12 @@ class HazardPerception implements HPInterface{
         return self::$template->fetch('hazresult.tpl');
     }
     
+    /**
+     * Sets the correct score for the videos and removes and minus figures added for skipped clips or anti-cheat activations
+     * @param int $i This should be the number of the video
+     * @param int $hazards This should be the number of hazards that the video contains
+     * @return array 
+     */
     protected function videoScore($i, $hazards){
         $videos = array();
         $first_score = intval($this->getSessionInfo()[$i]['score']);
@@ -656,6 +666,11 @@ class HazardPerception implements HPInterface{
         return $videos;
     }
     
+    /**
+     * returns the status of the video if there is one else returns false
+     * @param int $score This should be the score assignes to the first score window
+     * @return boolean|string
+     */
     protected function videoStatus($score){
         if($score == '-2'){return 'Skipped';}
         elseif($score == '-1'){return 'Cheat';}
