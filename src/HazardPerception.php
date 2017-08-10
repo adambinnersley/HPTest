@@ -366,7 +366,7 @@ class HazardPerception implements HPInterface{
         $this->getVideoInfo($videoID);
         $this->getUserProgress($this->getTestID());
         $questionNo = $this->currentVideoNo($videoID);
-        if($_SESSION['hptest'.$this->getTestID()][$questionNo]['score'] != -1){
+        if($_SESSION['hptest'.$this->getTestID()][$questionNo]['score'] >= 0){
             $clicks = unserialize($_SESSION['hptest'.$this->getTestID()][$questionNo]['clicks']);
             $score = false;
             $secscore = false;
@@ -427,7 +427,7 @@ class HazardPerception implements HPInterface{
             self::$template->assign('script', $this->getScript());
             self::$template->assign('testID', $this->getTestID());
             
-            if($this->report === false){$this->videodata = self::$template->fetch('hazlayout.tpl');}else{$this->videodata = self::$template->fetch('hazlayoutreport.tpl');}
+            $this->videodata = ($this->report === false ? self::$template->fetch('hazlayout.tpl') : self::$template->fetch('hazlayoutreport.tpl'));
             return json_encode(array('html' => $this->videodata, 'questionnum' => $this->currentVideoNo($prim)));
         }
         return false;
@@ -597,14 +597,13 @@ class HazardPerception implements HPInterface{
      * @return string Returns the end test report HTML ready to be rendered
      */
     public function endTest($mark){
+        $this->getUserProgress($this->getTestID());
         if($mark === true){
-            $this->getUserProgress($this->getTestID());
             for($i = 1; $i <= $this->numVideos; $i++){
                 $this->markVideo($_SESSION['hptest'.$this->getTestID()]['videos'][$i]);
             }
             $this->userprogress = false;
         }
-        $this->getUserProgress($this->getTestID());
         $score = 0;
         $windows = array();
         $videos = array();
@@ -614,29 +613,29 @@ class HazardPerception implements HPInterface{
             $videos[$i]['id'] = $videoID;
             $videos[$i]['no'] = $i;
             $videos[$i]['description'] = $info['title'];
-            if($info['nohazards'] == 1 && intval($_SESSION['hptest'.$this->getTestID()][$i]['score']) < 0){
-                $videos[$i]['score'] = 0;
-                $windows[0]++;
-            }
-            elseif($info['nohazards'] == 1){
-                $videos[$i]['score'] = intval($_SESSION['hptest'.$this->getTestID()][$i]['score']);
-                $score = $score + intval($_SESSION['hptest'.$this->getTestID()][$i]['score']);
-                $windows[intval($_SESSION['hptest'.$this->getTestID()][$i]['score'])]++;
-            }
-            elseif(intval($_SESSION['hptest'.$this->getTestID()][$i]['score']) < 0){
-                $videos[$i]['score'] = '0 + 0';
-                $windows[0]++;
-                $windows[0]++;
+            $first_score = intval($_SESSION['hptest'.$this->getTestID()][$i]['score']);
+            if($info['nohazards'] == 1){
+                $videos[$i]['score'] = ($first_score < 0 ? 0 : $first_score);
+                $score = $score + $videos[$i]['score'];
+                $windows[$videos[$i]['score']]++;
             }
             else{
-                $videos[$i]['score'] = intval($_SESSION['hptest'.$this->getTestID()][$i]['score']).' + '.intval($_SESSION['hptest'.$this->getTestID()]['second_score']);
-                $score = $score + (intval($_SESSION['hptest'.$this->getTestID()][$i]['score']) + intval($_SESSION['hptest'.$this->getTestID()]['second_score']));
-                $windows[intval($_SESSION['hptest'.$this->getTestID()][$i]['score'])]++;
-                $windows[intval($_SESSION['hptest'.$this->getTestID()]['second_score'])]++;
+                if($first_score < 0){
+                    $score1 = 0;
+                    $score2 = 0;
+                }
+                else{
+                    $score1 = $score1;
+                    $score2 = intval($_SESSION['hptest'.$this->getTestID()]['second_score']);
+                }
+                $videos[$i]['score'] = $score1.' + '.$score2;
+                $score = $score + $score1 + $score2;
+                $windows[$score1]++;
+                $windows[$score2]++;
             }
             
-            if(intval($_SESSION['hptest'.$this->getTestID()][$i]['score']) == '-2'){$videos[$i]['status'] = 'Skipped';}
-            elseif(intval($_SESSION['hptest'.$this->getTestID()][$i]['score']) == '-1'){$videos[$i]['status'] = 'Cheat';}
+            if($first_score == '-2'){$videos[$i]['status'] = 'Skipped';}
+            elseif($first_score == '-1'){$videos[$i]['status'] = 'Cheat';}
         }
         if($mark === true){
             if($score >= $this->getPassmark()){$this->status = 1;}else{$this->status = 2;}
