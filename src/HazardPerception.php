@@ -386,14 +386,26 @@ class HazardPerception implements HPInterface{
     /**
      * Returns the mark for the click location
      * @param int $click The click location to score
+     * @param int $winNo
      * @return int|boolean If the click scores any marks that score will be returned else will return false
      */
-    protected function markHazard($click, $window = 1){
-        if($click >= $this->videoInfo[($window === 1 ? 'five' : 'ten')] && $click < $this->videoInfo[($window === 1 ? 'four' : 'nine')]){return 5;}
-        elseif($click >= $this->videoInfo[($window === 1 ? 'four' : 'nine')] && $click < $this->videoInfo[($window === 1 ? 'three' : 'eight')]){return 4;}
-        elseif($click >= $this->videoInfo[($window === 1 ? 'three' : 'eight')] && $click < $this->videoInfo[($window === 1 ? 'two' : 'seven')]){return 3;}
-        elseif($click >= $this->videoInfo[($window === 1 ? 'two' : 'seven')] && $click < $this->videoInfo[($window === 1 ? 'one' : 'six')]){return 2;}
-        elseif($click >= $this->videoInfo[($window === 1 ? 'one' : 'six')] && $click <= $this->videoInfo['endseq'.($window === 1 ? '' : '2')]){return 1;}
+    protected function markHazard($click, $winNo = 1){
+        $window = array(
+            1 => array('five', 'four', 'three', 'two', 'one', 'endseq'),
+            2 => array('ten', 'nine', 'eight', 'seven', 'six', 'endseq2')
+        );
+        if($click >= $this->videoInfo[$window[$winNo][0]] && $click < $this->videoInfo[$window[$winNo][1]]){return 5;}
+        elseif($click >= $this->videoInfo[$window[$winNo][1]] && $click < $this->videoInfo[$window[$winNo][2]]){return 4;}
+        elseif($click >= $this->videoInfo[$window[$winNo][2]] && $click < $this->videoInfo[$window[$winNo][3]]){return 3;}
+        elseif($click >= $this->videoInfo[$window[$winNo][3]] && $click < $this->videoInfo[$window[$winNo][4]]){return 2;}
+        elseif($click >= $this->videoInfo[$window[$winNo][4]] && $click <= $this->videoInfo[$window[$winNo][5]]){return 1;}
+        return false;
+    }
+    
+    protected function checkWindow($click, $start, $end){
+        if($click >= $this->videoInfo[$start] && $click < $this->videoInfo[$end]){
+            return true;
+        }
         return false;
     }
     
