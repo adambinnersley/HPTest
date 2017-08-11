@@ -25,6 +25,8 @@ class HazardPerception implements HPInterface{
     protected $userAnswers;
     protected $status;
     
+    public $javascriptLocation = '/js/theory/';
+    
     public $videoLocation = '/videos/';
     protected $videoInfo;
     protected $videodata;
@@ -46,7 +48,7 @@ class HazardPerception implements HPInterface{
      * @param Smarty $template This should be the instance of Smarty Templating
      * @param User $user This should be an instance of User
      */
-    public function __construct(Database $db, Smarty $template, User $user){
+    public function __construct(Database $db, Smarty $template, User $user) {
         self::$db = $db;
         self::$user = $user;
         self::$template = $template;
@@ -60,10 +62,10 @@ class HazardPerception implements HPInterface{
      * @param int|false $prim The prim number to start the report on, if not in a report should be false
      * @return string Returns the HTML code for the current HTML test
      */
-    public function createTest($testNo = 1, $report = false, $prim = false){
+    public function createTest($testNo = 1, $report = false, $prim = false) {
         $this->setTestID($testNo);
         self::$user->checkUserAccess($testNo);
-        if(!$this->anyCompleteTests() || $this->confirm || $report === true){
+        if(!$this->anyCompleteTests() || $this->confirm || $report === true) {
             $this->report = $report;
             $this->chooseVideos($testNo);
             return $this->buildTest($prim);
@@ -79,8 +81,8 @@ class HazardPerception implements HPInterface{
      * @param int $testID This should be the test ID that you wish to retrieve the users progress for
      * @return array Returns the users test progress as an array
      */
-    public function getUserProgress($testID){
-        if($this->getSessionInfo()){
+    public function getUserProgress($testID) {
+        if($this->getSessionInfo()) {
             return $this->getSessionInfo();
         }
         else{
@@ -94,7 +96,7 @@ class HazardPerception implements HPInterface{
      * Retrieves the test information from the current session
      * @return array
      */
-    public function getSessionInfo(){
+    public function getSessionInfo() {
         return $_SESSION['hptest'.$this->getTestID()];
     }
     
@@ -103,14 +105,14 @@ class HazardPerception implements HPInterface{
      * @param int $testNo This should be the Test ID
      * @return void nothing is returned
      */
-    protected function chooseVideos($testNo){
+    protected function chooseVideos($testNo) {
         $videos = self::$db->selectAll($this->getVideoTable(), array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
-        if($this->report === false){
+        if($this->report === false) {
             unset($_SESSION['hptest'.$testNo]);
             self::$db->delete($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()));
         }
         $v = 1;
-        foreach($videos as $video){
+        foreach($videos as $video) {
             $this->userAnswers[$v]['id'] = $video['id'];
             $_SESSION['hptest'.$testNo]['videos'][$v] = $video['id'];
             $v++;
@@ -120,7 +122,7 @@ class HazardPerception implements HPInterface{
     /**
      * Sets the variable to confirm the user wishes to override the test
      */
-    public function confirmOverride(){
+    public function confirmOverride() {
         $this->confirm = true;
     }
     
@@ -128,7 +130,7 @@ class HazardPerception implements HPInterface{
      * Sets the current test ID
      * @param int $testID This should be the current test ID
      */
-    public function setTestID($testID){
+    public function setTestID($testID) {
         $this->testID = intval($testID);
         return $this;
     }
@@ -137,7 +139,7 @@ class HazardPerception implements HPInterface{
      * Returns the current test ID
      * @return int Returns the current test ID
      */
-    protected function getTestID(){
+    protected function getTestID() {
         return $this->testID;
     }
     
@@ -146,7 +148,7 @@ class HazardPerception implements HPInterface{
      * @param int $passmark This should be the score the user needs to get to pass the test
      * @return $this
      */
-    public function setPassmark($passmark){
+    public function setPassmark($passmark) {
         $this->passmark = intval($passmark);
         return $this;
     }
@@ -164,7 +166,7 @@ class HazardPerception implements HPInterface{
      * @param string $location The path to the video clips
      * @return $this
      */
-    public function setVidLocation($location){
+    public function setVidLocation($location) {
         $this->videoLocation = $location;
         return $this;
     }
@@ -173,8 +175,26 @@ class HazardPerception implements HPInterface{
      * Returns the video path
      * @return string This is the path to where the videos are located (minus the mp4 and ogv)
      */
-    public function getVidLocation(){
+    public function getVidLocation() {
         return $this->videoLocation;
+    }
+    
+    /**
+     * Sets the location where the JavaScript files can be found
+     * @param string $location The should either be a URL or a relative position
+     * @return $this
+     */
+    public function setJavascriptLocation($location) {
+        $this->javascriptLocation = $location;
+        return $this;
+    }
+    
+    /**
+     * Returns the currents set location of the JavaScript files
+     * @return string This should be the folder where all the JavaScript files can be found
+     */
+    public function getJavascriptLocation() {
+        return $this->javascriptLocation;
     }
     
     /**
@@ -182,7 +202,7 @@ class HazardPerception implements HPInterface{
      * @param string $type This should be the type of user in the database to check for upgrade status
      * @return $this
      */
-    public function setUserType($type){
+    public function setUserType($type) {
         $this->userType = $type;
         return $this;
     }
@@ -191,7 +211,7 @@ class HazardPerception implements HPInterface{
      * Gets the user type to check for upgrade status
      * @return string This should be the field name to check for the upgrade status (currently account, adi, fleet, bike)
      */
-    public function getUserType(){
+    public function getUserType() {
         return $this->userType;
     }
     
@@ -200,7 +220,7 @@ class HazardPerception implements HPInterface{
      * @param string $type Sets the type of test the user is taking (car, bike, fleet, adi)
      * @return $this
      */
-    public function setTestType($type){
+    public function setTestType($type) {
         $this->testType = strtoupper($type);
         return $this;
     }
@@ -209,7 +229,7 @@ class HazardPerception implements HPInterface{
      * Returns the current type of test the user is taking
      * @return string Will return the test type
      */
-    public function getTestType(){
+    public function getTestType() {
         return strtoupper($this->testType);
     }
     
@@ -218,7 +238,7 @@ class HazardPerception implements HPInterface{
      * @param string $table This should be the table name where the videos are located
      * @return $this
      */
-    public function setVideoTable($table){
+    public function setVideoTable($table) {
         $this->videosTable = $table;
         return $this;
     }
@@ -227,7 +247,7 @@ class HazardPerception implements HPInterface{
      * Return the videos table where the videos are located
      * @return string This will be the table name where the videos are
      */
-    public function getVideoTable(){
+    public function getVideoTable() {
         return $this->videosTable;
     }
     
@@ -236,7 +256,7 @@ class HazardPerception implements HPInterface{
      * @param string $table Sets the table name where the videos are store
      * @return $this
      */
-    public function setProgressTable($table){
+    public function setProgressTable($table) {
         $this->progressTable = $table;
         return $this;
     }
@@ -245,7 +265,7 @@ class HazardPerception implements HPInterface{
      * Returns the table where the progress is stored
      * @return string This is the table where the progress is stored 
      */
-    public function getProgressTable(){
+    public function getProgressTable() {
         return $this->progressTable;
     }
     
@@ -254,9 +274,9 @@ class HazardPerception implements HPInterface{
      * @param int $videoID This should be the current video id
      * @return string Returns the previous video button HTML code
      */
-    protected function prevVideo($videoID){
+    protected function prevVideo($videoID) {
         $prevID = ($this->currentVideoNo($videoID) - 1);
-        if($prevID >= 1){$vidID = $this->getSessionInfo()['videos'][$prevID];}
+        if($prevID >= 1) {$vidID = $this->getSessionInfo()['videos'][$prevID];}
         else{$vidID = 'none';}
         return '<div id="'.$vidID.'" class="prevvideo"><span>Prev Clip</span></div>';
     }
@@ -266,11 +286,11 @@ class HazardPerception implements HPInterface{
      * @param int $videoID This should be the current video id
      * @return string Returns the next video button HTML code
      */
-    protected function nextVideo($videoID){
+    protected function nextVideo($videoID) {
         $nextID = ($this->currentVideoNo($videoID) + 1);
-        if($nextID <= 14){$vidID = $this->getSessionInfo()['videos'][$nextID];}
+        if($nextID <= 14) {$vidID = $this->getSessionInfo()['videos'][$nextID];}
         else{$vidID = 'none';}
-        if(filter_input(INPUT_GET, 'review')){
+        if(filter_input(INPUT_GET, 'review')) {
             return '<div id="'.$vidID.'" class="nextvideo"><span class="sr-only">Skip Clip</span></div>';
         }
         else{
@@ -283,9 +303,9 @@ class HazardPerception implements HPInterface{
      * @param int $videoID The current video prim number
      * @return int|boolean Returns the current video id if progress exists else returns false
      */
-    protected function currentVideoNo($videoID){
-        foreach($this->getSessionInfo()['videos'] as $number => $value){
-            if($value == $videoID){return intval($number);}
+    protected function currentVideoNo($videoID) {
+        foreach($this->getSessionInfo()['videos'] as $number => $value) {
+            if($value == $videoID) {return intval($number);}
         }
         return false;
     }
@@ -295,7 +315,7 @@ class HazardPerception implements HPInterface{
      * @param int $videoID This should be the id number for the video you wish to retrieve the video information for
      * @return array The video information will be returned as an array
      */
-    protected function getVideoInfo($videoID){
+    protected function getVideoInfo($videoID) {
         $this->videoInfo = self::$db->select($this->getVideoTable(), array('id' => $videoID));
         return $this->videoInfo;
     }
@@ -305,7 +325,7 @@ class HazardPerception implements HPInterface{
      * @param int $videoID This should be the ID of the video you are getting the information for
      * @return string|false If information exists with will be returned as a string else will return false
      */
-    protected function getVideoName($videoID){
+    protected function getVideoName($videoID) {
         $this->getVideoInfo($videoID);
         return strtolower($this->videoInfo['reference']);
     }
@@ -315,7 +335,7 @@ class HazardPerception implements HPInterface{
      * @param int $videoID This should be the ID of the video you wish to get the HTML code for
      * @return string Returns the HTML code as a string for the given video
      */
-    private function getVideo($videoID){
+    private function getVideo($videoID) {
         $videoName = $this->getVideoName($videoID);
         return '<div id="video_overlay"><div id="icon"><img src="/images/hloading.gif" alt="Loading" width="100" height="100" /></div></div><video width="544" height="408" id="video" class="video" data-duration="'.$this->videoInfo['endClip'].'" preload="auto" muted playsinline webkit-playsinline><source src="'.$this->videoLocation.'mp4/'.$videoName.'.mp4" type="video/mp4" /><source src="'.$this->videoLocation.'ogv/'.$videoName.'.ogv" type="video/ogg" /></video>';
     }
@@ -324,9 +344,9 @@ class HazardPerception implements HPInterface{
      * Returns the required JavaScript files as a HTML code string
      * @return string Returns the required JavaScript files as a HTML code string ready to be output
      */
-    protected function getScript(){
-        if($this->report === false){return '<script type="text/javascript" src="/js/theory/hazard-perception-hazupdate.js"></script>';}
-        else{return '<script type="text/javascript" src="/js/theory/hazard-report-hazupdate.js"></script>';}
+    protected function getScript() {
+        if($this->report === false) {return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-perception-hazupdate.js"></script>';}
+        else{return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-report-hazupdate.js"></script>';}
     }
     
     /**
@@ -335,7 +355,7 @@ class HazardPerception implements HPInterface{
      * @param int $videoID The ID of the video where the click is being added to
      * @return void Nothing is returned
      */
-    public function addFlag($clickTime, $videoID){
+    public function addFlag($clickTime, $videoID) {
         $this->getUserProgress($this->getTestID());
         $questionNo = $this->currentVideoNo($videoID);
         $clicks = unserialize($this->getSessionInfo()[$questionNo]['clicks']);
@@ -348,7 +368,7 @@ class HazardPerception implements HPInterface{
      * @param int $videoID The ID of the video which cheating was detected
      * @param int $score The score which should be added to the video depending on the type of cheating
      */
-    public function cheatDetected($videoID, $score){
+    public function cheatDetected($videoID, $score) {
         $questionNo = $this->currentVideoNo($videoID);
         $_SESSION['hptest'.$this->getTestID()][$questionNo]['score'] = $score;
         $this->addFlag(false, $videoID);
@@ -359,20 +379,20 @@ class HazardPerception implements HPInterface{
      * @param int $videoID The ID of the video you wish to mark and update the database
      * @return void Nothing is returned
      */
-    public function markVideo($videoID){
+    public function markVideo($videoID) {
         $this->getVideoInfo($videoID);
         $this->getUserProgress($this->getTestID());
         $questionNo = $this->currentVideoNo($videoID);
-        if($this->getSessionInfo()[$questionNo]['score'] >= 0){
+        if($this->getSessionInfo()[$questionNo]['score'] >= 0) {
             $clicks = unserialize($this->getSessionInfo()[$questionNo]['clicks']);
             $score = false;
             $secscore = false;
-            foreach($clicks as $click){
-                if($score === false && $click >= $this->videoInfo['five'] && $click <= $this->videoInfo['endseq']){
+            foreach($clicks as $click) {
+                if($score === false && $click >= $this->videoInfo['five'] && $click <= $this->videoInfo['endseq']) {
                     $score = $this->markHazard($click);
                     $_SESSION['hptest'.$this->getTestID()][$questionNo]['score'] = intval($score);
                 }
-                if($secscore === false && $this->videoInfo['nohazards'] == 2 && $click >= $this->videoInfo['ten'] && $click <= $this->videoInfo['endseq2']){
+                if($secscore === false && $this->videoInfo['nohazards'] == 2 && $click >= $this->videoInfo['ten'] && $click <= $this->videoInfo['endseq2']) {
                     $secscore = $this->markHazard($click, 2);
                     $_SESSION['hptest'.$this->getTestID()]['second_score'] = intval($secscore);
                 }
@@ -386,10 +406,10 @@ class HazardPerception implements HPInterface{
      * @param int $winNo
      * @return int|boolean If the click scores any marks that score will be returned else will return false
      */
-    protected function markHazard($click, $winNo = 1){
+    protected function markHazard($click, $winNo = 1) {
         $score = 5;
-        for($h = 0; $h <= 4; $h++){
-            if($click >= $this->videoInfo[$this->windows[$winNo][$h]] && $click < $this->videoInfo[$this->windows[$winNo][($h + 1)]]){return $score;}
+        for($h = 0; $h <= 4; $h++) {
+            if($click >= $this->videoInfo[$this->windows[$winNo][$h]] && $click < $this->videoInfo[$this->windows[$winNo][($h + 1)]]) {return $score;}
             $score--;
         }
         return false;
@@ -401,9 +421,9 @@ class HazardPerception implements HPInterface{
      * @param boolean $review If the user is in the review section should be set to true else should be false
      * @return string|false Returns the HTML code and question number as a JSON encoded string if that prim number exists else return false
      */
-    public function createHTML($prim, $review = false){
+    public function createHTML($prim, $review = false) {
         $this->report = $review;
-        if(is_numeric($prim)){
+        if(is_numeric($prim)) {
             $videoInfo = $this->getVideoInfo($prim);
             self::$template->assign('videotitle', $videoInfo['title']."<br />".$videoInfo['title2']);
             self::$template->assign('videodesc', nl2br($videoInfo['description']."\r\n\r\n".$videoInfo['description2']));
@@ -431,7 +451,7 @@ class HazardPerception implements HPInterface{
      * @param string $num This is the number you wish to convert to 3 decimal places
      * @return string Returns the number as a decimal with 3 decimal places
      */
-    private function dec($num){
+    private function dec($num) {
         return number_format($num, 3);
     }
     
@@ -439,7 +459,7 @@ class HazardPerception implements HPInterface{
      * Checks to see if the user has already completed this test
      * @return boolean Returns true if test already exist
      */
-    protected function anyCompleteTests(){
+    protected function anyCompleteTests() {
         return self::$db->select($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()));
     }
     
@@ -448,9 +468,9 @@ class HazardPerception implements HPInterface{
      * @param int $winNo The score window number for the hazards i.e. 1st or 2nd hazard
      * @return string Returns the score window HTML code
      */
-    public function buildScoreWindow($winNo = 1){
+    public function buildScoreWindow($winNo = 1) {
         $widthperc = (100 / $this->videoInfo['endClip']);
-        if($this->videoInfo[$this->windows[$winNo][6]] != NULL){
+        if($this->videoInfo[$this->windows[$winNo][6]] != NULL) {
             $margin1 = ($winNo === 1 ? $this->dec(($this->videoInfo[$this->windows[$winNo][6]] / $this->videoInfo['endClip']) * 100) : $this->dec((($this->videoInfo[$this->windows[$winNo][6]] / $this->videoInfo['endClip']) - ($this->videoInfo[$this->windows[1][5]] / $this->videoInfo['endClip'])) * 100));
             $prewidth = $this->dec(($this->videoInfo[$this->windows[$winNo][0]] - $this->videoInfo[$this->windows[$winNo][6]]) * $widthperc);
             $pre = '<div id="pre'.$winNo.'" style="margin-left:'.$margin1.'%;width:'.$prewidth.'%"></div>';
@@ -460,10 +480,10 @@ class HazardPerception implements HPInterface{
             $marginleft = ($winNo === 1 ? (($this->videoInfo[$this->windows[$winNo][0]] / $this->videoInfo['endClip']) * 100) : $this->dec((($this->videoInfo[$this->windows[$winNo][0]] / $this->videoInfo['endClip']) - ($this->videoInfo[$this->windows[1][5]] / $this->videoInfo['endClip'])) * 100));
             $pre = '';
         }
-        for($v = 0; $v <= 4; $v++){
+        for($v = 0; $v <= 4; $v++) {
             $pre.= '<div id="'.$this->windows[$winNo][0].'" style="'.($v === 0 ? 'margin-left:'.$marginleft.'%;' : '').'width:'.$this->dec(($this->videoInfo[$this->windows[$winNo][($v+1)]] - $this->videoInfo[$this->windows[$winNo][$v]]) * $widthperc).'%" data-score="'.$this->videoInfo[$this->windows[$winNo][0]].'">';
         }
-        if($winNo === 1 && $this->videoInfo['nohazards'] == 2){
+        if($winNo === 1 && $this->videoInfo['nohazards'] == 2) {
             $pre.= $this->buildScoreWindow(2);
         }
         return $pre;
@@ -474,11 +494,11 @@ class HazardPerception implements HPInterface{
      * @param int $videoID The video ID to get the score window for
      * @return string This should be the flay with the styling added to the HTML code
      */
-    protected function getReviewFlags($videoID){
+    protected function getReviewFlags($videoID) {
         $clicks = unserialize($this->getSessionInfo()[$this->currentVideoNo($videoID)]['clicks']);
         $flags = '';
-        if(is_array($clicks)){
-            foreach($clicks as $i => $click){
+        if(is_array($clicks)) {
+            foreach($clicks as $i => $click) {
                 $marginleft = ((($click / $this->videoInfo['endClip']) * 100) - 0.4);
                 $flags.= '<img src="/images/hpflag.png" alt="Flag" width="20" height="20" id="flag'.($i + 1).'" class="reviewflag" style="left:'.$marginleft.'%" data-click="'.$click.'" />';
             }
@@ -491,13 +511,13 @@ class HazardPerception implements HPInterface{
      * @param int $prim The video ID you are getting the score HTML for
      * @return string Returns the score text HTML code
      */
-    protected function clipScore($prim){
+    protected function clipScore($prim) {
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
         $vidInfo = $this->getVideoInfo($prim);
-        if($this->getSessionInfo()[$clipNo]['score'] < 0){$score = 0;}
+        if($this->getSessionInfo()[$clipNo]['score'] < 0) {$score = 0;}
         else{$score = $this->getSessionInfo()[$clipNo]['score'];}
-        if($vidInfo['nohazards'] == 1){return '<div class="yourscore">You scored '.intval($score).' for this hazard</div>';}
+        if($vidInfo['nohazards'] == 1) {return '<div class="yourscore">You scored '.intval($score).' for this hazard</div>';}
         else{return '<div class="yourscore">You scored '.intval($score).' for the first hazard and '.intval($this->getSessionInfo()['second_score']).' for the second hazard</div>';}
     }
     
@@ -506,10 +526,10 @@ class HazardPerception implements HPInterface{
      * @param int $prim This should be the video ID
      * @return string|false If the anti-cheat was activated a string of HTML code will be returned else will return false
      */
-    protected function anyCheating($prim){
+    protected function anyCheating($prim) {
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
-        if($this->getSessionInfo()[$clipNo]['score'] == -1){return '<div id="anticheat">Anti-Cheat Activated</div>';}
+        if($this->getSessionInfo()[$clipNo]['score'] == -1) {return '<div id="anticheat">Anti-Cheat Activated</div>';}
         return false;
     }
     
@@ -519,7 +539,7 @@ class HazardPerception implements HPInterface{
      * @param int $videoID The Video ID number 
      * @return string Returns the Hazard Perception Test HTML code
      */
-    public function loadNextVideo($testID, $videoID){
+    public function loadNextVideo($testID, $videoID) {
         $this->setTestID($testID);
         $this->report = false;
         return $this->buildTest($videoID);
@@ -530,14 +550,14 @@ class HazardPerception implements HPInterface{
      * @param int|false $prim The prim number normally for the first question in the test
      * @return string Returns the Hazard Perception Test HTML code
      */
-    protected function buildTest($prim = false){
-        if(!is_numeric($prim)){$prim = $this->userAnswers[1]['id'];}
+    protected function buildTest($prim = false) {
+        if(!is_numeric($prim)) {$prim = $this->userAnswers[1]['id'];}
         $this->createHTML($prim, $this->report);
         
         self::$template->assign('question_no', $this->currentVideoNo($prim));
         self::$template->assign('no_questions', $this->numVideos);
         self::$template->assign('video_data', $this->videodata);
-        if($this->report === false){return self::$template->fetch('hazardtest.tpl');}else{return self::$template->fetch('hazardtestreport.tpl');}
+        if($this->report === false) {return self::$template->fetch('hazardtest.tpl');}else{return self::$template->fetch('hazardtestreport.tpl');}
     }
     
     /**
@@ -545,9 +565,9 @@ class HazardPerception implements HPInterface{
      * @param int $testID This should be the testID you wish to retrieve the report information for
      * @return string This will return the retort HTML code ready to be rendered in the page
      */
-    public function createReport($testID){
+    public function createReport($testID) {
         $this->setTestID($testID);
-        if($this->anyCompleteTests()){
+        if($this->anyCompleteTests()) {
             return $this->endTest(false);
         }
         return self::$template->fetch('..'.DS.'report'.DS.'report-unavail.tpl');
@@ -557,9 +577,9 @@ class HazardPerception implements HPInterface{
      * Returns the test status either passed or failed
      * @return string Returns either passed or failed depending on how the user did on the test
      */
-    public function testStatus(){
+    public function testStatus() {
         $testInfo = $this->anyCompleteTests();
-        if($testInfo['status'] == 1){return 'passed';}
+        if($testInfo['status'] == 1) {return 'passed';}
         else{return 'failed';}
     }
     
@@ -568,10 +588,10 @@ class HazardPerception implements HPInterface{
      * @param boolean $mark If the test needs marking set to true else should be false
      * @return string Returns the end test report HTML ready to be rendered
      */
-    public function endTest($mark){
+    public function endTest($mark) {
         $this->getUserProgress($this->getTestID());
-        if($mark === true){
-            for($i = 1; $i <= $this->numVideos; $i++){
+        if($mark === true) {
+            for($i = 1; $i <= $this->numVideos; $i++) {
                 $this->markVideo($this->getSessionInfo()['videos'][$i]);
             }
             $this->userprogress = false;
@@ -579,7 +599,7 @@ class HazardPerception implements HPInterface{
         $score = 0;
         $windows = array();
         $videos = array();
-        for($i = 1; $i <= $this->numVideos; $i++){
+        for($i = 1; $i <= $this->numVideos; $i++) {
             $videoID = $this->getSessionInfo()['videos'][$i];
             $info = $this->getVideoInfo($videoID);
             $scoreInfo = $this->videoScore($i, $info['nohazards']);
@@ -588,11 +608,11 @@ class HazardPerception implements HPInterface{
             $videos[$i]['description'] = $info['title'];
             $videos[$i]['score'] = $scoreInfo['text_score'];
             $windows[$scoreInfo['score']]++;
-            if($scoreInfo['second_score']){$windows[$scoreInfo['second_score']]++;}
+            if($scoreInfo['second_score']) {$windows[$scoreInfo['second_score']]++;}
             $score = $score + intval($scoreInfo['score']) + intval($scoreInfo['second_score']);
         }
-        if($mark === true){
-            if($score >= $this->getPassmark()){$this->status = 1;}else{$this->status = 2;}
+        if($mark === true) {
+            if($score >= $this->getPassmark()) {$this->status = 1;}else{$this->status = 2;}
             $this->getSessionInfo()['totalscore'] = $score;
             $this->addResultsToDB();
         }
@@ -610,15 +630,15 @@ class HazardPerception implements HPInterface{
      * @param int $hazards This should be the number of hazards that the video contains
      * @return array 
      */
-    protected function videoScore($i, $hazards){
+    protected function videoScore($i, $hazards) {
         $videos = array();
         $first_score = intval($this->getSessionInfo()[$i]['score']);
-        if($hazards == 1){
+        if($hazards == 1) {
             $videos['text_score'] = ($first_score < 0 ? 0 : $first_score);
             $videos['score'] = $videos['text_score'];
         }
         else{
-            if($first_score < 0){
+            if($first_score < 0) {
                 $score1 = 0;
                 $score2 = 0;
             }
@@ -639,16 +659,16 @@ class HazardPerception implements HPInterface{
      * @param int $score This should be the score assigns to the first score window
      * @return boolean|string
      */
-    protected function videoStatus($score){
-        if($score == '-2'){return 'Skipped';}
-        elseif($score == '-1'){return 'Cheat';}
+    protected function videoStatus($score) {
+        if($score == '-2') {return 'Skipped';}
+        elseif($score == '-1') {return 'Cheat';}
         return false;
     }
 
     /**
      * Inserts the users results into the database
      */
-    protected function addResultsToDB(){
+    protected function addResultsToDB() {
         self::$db->delete($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType())); // Delete old tests
         self::$db->insert($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status));
     }
