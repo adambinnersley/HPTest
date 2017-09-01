@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of HazardPerception
- *
- * @author Adam Binnersley
- */
 namespace HPTest;
 
 use DBAL\Database;
@@ -48,7 +43,7 @@ class HazardPerception implements HPInterface{
      * @param Smarty $template This should be the instance of Smarty Templating
      * @param User $user This should be an instance of User
      */
-    public function __construct(Database $db, Smarty $template, User $user) {
+    public function __construct(Database $db, Smarty $template, User $user, $userID = false) {
         self::$db = $db;
         self::$user = $user;
         self::$template = $template;
