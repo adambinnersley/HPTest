@@ -8,6 +8,7 @@ class HazardPerception implements HPInterface{
     protected static $template;
     protected static $db;
     protected static $user;
+    protected $userClone = false;
     protected $userprogress = false;
 
     public $videosTable = 'hazard_clips_new';
@@ -48,6 +49,18 @@ class HazardPerception implements HPInterface{
         self::$user = $user;
         self::$template = $template;
         self::$template->addTemplateDir(dirname(__FILE__).DS.'templates');
+        if(is_numeric($userID)){$this->userClone = (int) $userID;}
+    }
+    
+    /**
+     * Returns the userID or the mock userID if you wish to look at users progress
+     * @return int Returns the UserID or mocked up userID if valid
+     */
+    public function getUserID(){
+        if(is_int($this->userClone)){
+            return $this->userClone;
+        }
+        return $this->getUserID();
     }
     
     /**
@@ -81,7 +94,7 @@ class HazardPerception implements HPInterface{
             return $this->getSessionInfo();
         }
         else{
-            $userProgress = self::$db->select($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()));
+            $userProgress = self::$db->select($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()));
             $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
             return $this->getSessionInfo();
         }
@@ -104,7 +117,7 @@ class HazardPerception implements HPInterface{
         $videos = self::$db->selectAll($this->getVideoTable(), array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
         if($this->report === false) {
             unset($_SESSION['hptest'.$testNo]);
-            self::$db->delete($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()));
+            self::$db->delete($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()));
         }
         $v = 1;
         foreach($videos as $video) {
@@ -455,7 +468,7 @@ class HazardPerception implements HPInterface{
      * @return boolean Returns true if test already exist
      */
     protected function anyCompleteTests() {
-        return self::$db->select($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()));
+        return self::$db->select($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()));
     }
     
     /**
@@ -664,7 +677,7 @@ class HazardPerception implements HPInterface{
      * Inserts the users results into the database
      */
     protected function addResultsToDB() {
-        self::$db->delete($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType())); // Delete old tests
-        self::$db->insert($this->getProgressTable(), array('user_id' => self::$user->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status));
+        self::$db->delete($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType())); // Delete old tests
+        self::$db->insert($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status));
     }
 }
