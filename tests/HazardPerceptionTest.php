@@ -21,11 +21,12 @@ class HazardPerceptionTest extends TestCase{
         }
         self::$user = new User(self::$db);
         self::$hp = new HazardPerception(self::$db, new Smarty(), self::$user);
-        parent::setUp();
     }
     
     public function tearDown() {
-        parent::tearDown();
+        unset(self::$db);
+        unset(self::$hp);
+        unset(self::$user);
     }
     
     public function testExample() {
