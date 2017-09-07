@@ -15,7 +15,7 @@ class FreeHazardPerception extends HazardPerception{
     public function createTest($testNo = 1, $report = false, $prim = false) {
         $this->setTestID($testNo);
         $this->report = $report;
-        if($this->report == false){$this->chooseVideos($testNo);}
+        if($this->report === false){$this->chooseVideos($testNo);}
         return $this->buildTest($prim, $report, $prim);
     }
     
@@ -39,11 +39,10 @@ class FreeHazardPerception extends HazardPerception{
     /**
      * Choose the videos for the given Hazard Perception Test number
      * @param int $testNo This should be the Test ID
-     * @return void nothing is returned
      */
     protected function chooseVideos($testNo){
         $videos = self::$db->selectAll($this->videosTable, array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
-        if($this->report == false){
+        if($this->report === false){
             unset($_SESSION['hptest'.$testNo]);
         }
         $v = 1;
