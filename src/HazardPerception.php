@@ -26,6 +26,7 @@ class HazardPerception implements HPInterface{
     public $videoLocation = '/videos/';
     protected $videoInfo;
     protected $videodata;
+    protected $scriptVar = 'hazupdate';
     
     protected $report = true;
     protected $confirm = false;
@@ -353,8 +354,8 @@ class HazardPerception implements HPInterface{
      * @return string Returns the required JavaScript files as a HTML code string ready to be output
      */
     protected function getScript() {
-        if($this->report === false) {return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-perception-hazupdate.js"></script>';}
-        else{return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-report-hazupdate.js"></script>';}
+        if($this->report === false) {return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-perception-'.$this->scriptVar.'.js"></script>';}
+        else{return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js"></script>';}
     }
     
     /**
