@@ -2,9 +2,7 @@
 
 namespace HPTest;
 
-class FreeHazardPerception extends HazardPerception{
-    public $videoLocation = '/videos/';
-    
+class FreeHazardPerception extends HazardPerception{   
     protected $scriptVar = 'freehazupdate';
     
     /**
