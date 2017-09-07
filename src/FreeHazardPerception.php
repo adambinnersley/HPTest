@@ -9,7 +9,7 @@ class FreeHazardPerception extends HazardPerception{
      * Returns the complete test HTML for the current question
      * @param int $testNo The number of the current test
      * @param boolean $report If the user is currently looking at the repost section
-     * @param int|boolean $prim The prim number of the current question if not new test
+     * @param int|false $prim The prim number of the current question if not new test
      * @return string Returns the test HTML for the test
      */
     public function createTest($testNo = 1, $report = false, $prim = false) {
