@@ -50,7 +50,7 @@ class HazardPerception implements HPInterface{
         self::$db = $db;
         self::$user = $user;
         self::$template = $template;
-        self::$template->addTemplateDir(dirname(__FILE__).DIRECTORY_SEPARATOR.'templates');
+        self::$template->addTemplateDir(str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates');
         if(is_numeric($userID)){$this->userClone = (int) $userID;}
     }
     
@@ -580,7 +580,7 @@ class HazardPerception implements HPInterface{
         if($this->anyCompleteTests()) {
             return $this->endTest(false);
         }
-        return self::$template->fetch('report-unavail.tpl');
+        return self::$template->fetch('report'.DIRECTORY_SEPARATOR.'report-unavail.tpl');
     }
     
     /**
