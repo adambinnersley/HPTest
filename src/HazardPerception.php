@@ -44,7 +44,7 @@ class HazardPerception implements HPInterface{
      * @param Database $db This should be an instance of Database
      * @param Smarty $template This should be the instance of Smarty Templating
      * @param object $user This should be an instance of User class
-     * @param int|false  If you want to emulate a user set this here
+     * @param int|false If you want to emulate a user set this here
      */
     public function __construct(Database $db, Smarty $template, $user, $userID = false) {
         self::$db = $db;
@@ -62,7 +62,7 @@ class HazardPerception implements HPInterface{
         if(is_int($this->userClone)){
             return $this->userClone;
         }
-        return $this->getUserID();
+        return self::$user->getUserID();
     }
     
     /**
