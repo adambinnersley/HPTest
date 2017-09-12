@@ -43,9 +43,10 @@ class HazardPerception implements HPInterface{
      * Sets the required variables for the test to be rendered
      * @param Database $db This should be an instance of Database
      * @param Smarty $template This should be the instance of Smarty Templating
-     * @param User $user This should be an instance of User
+     * @param object $user This should be an instance of User class
+     * @param int|false  If you want to emulate a user set this here
      */
-    public function __construct(Database $db, Smarty $template, User $user, $userID = false) {
+    public function __construct(Database $db, Smarty $template, $user, $userID = false) {
         self::$db = $db;
         self::$user = $user;
         self::$template = $template;
