@@ -2,14 +2,9 @@
 {nocache}
 <div class="row">
     <div class="col-md-12">
-        {if !$instructor}
         <ul class="pager">
-            <li class="previous"><a href="/student/hazard">&larr; Back to Hazard Tests</a></li>
+            <li class="previous"><a href="hazard">&larr; Back to Hazard Tests</a></li>
         </ul>
-        {else}
-            <a href="/student/progress?pupil={$smarty.get.pupil}" title="Back" class="btn btn-danger" id="backButton"><span class="fa fa-angle-left fa-fw"></span> Back to Lesson Progress</a>
-            <h3>Progress for {$pupilInfo.firstname} {$pupilInfo.surname}</h3>
-        {/if}
         <div class="havepassed hp-{if $score < $passmark}failed{else}passed{/if}">You have {if $score < $passmark}failed{else}passed{/if} this time</div>
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -48,15 +43,15 @@
             <div id="score-0">{$windows.0|string_format:"%d"}</div><div id="score-1">{$windows.1|string_format:"%d"}</div><div id="score-2">{$windows.2|string_format:"%d"}</div><div id="score-3">{$windows.3|string_format:"%d"}</div><div id="score-4">{$windows.4|string_format:"%d"}</div><div id="score-5">{$windows.5|string_format:"%d"}</div>
         </div>
     </div>
-    {if !$instructor}<div class="col-md-12">
+    <div class="col-md-12">
         <ul class="pager">
-            <li class="previous"><a href="/student/hazard">&larr; Back to Hazard Tests</a></li>
+            <li class="previous"><a href="hazard">&larr; Back to Hazard Tests</a></li>
         </ul>
-    </div>{/if}
+    </div>
 </div>
 <script type="text/javascript">
 $('.reviewhp td').click(function(){
-    window.location = '?{if $instructor}pupil={$smarty.get.pupil}&{/if}review=' + $('.resultstable').attr('id') + '&prim=' + $(this).parent("tr").attr('id');
+    window.location = '?review=' + $('.resultstable').attr('id') + '&prim=' + $(this).parent("tr").attr('id');
 });
 </script>
 {/nocache}
