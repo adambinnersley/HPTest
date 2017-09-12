@@ -77,7 +77,8 @@ class HazardPerception implements HPInterface{
         self::$user->checkUserAccess($testNo);
         if(!$this->anyCompleteTests() || $this->confirm || $report === true) {
             $this->report = $report;
-            $this->chooseVideos($testNo);
+            if($report === false){$this->chooseVideos($testNo);}
+            else{$this->getUserProgress($testNo);}
             return $this->buildTest($prim);
         }
         else{
@@ -491,7 +492,7 @@ class HazardPerception implements HPInterface{
             $pre = '';
         }
         for($v = 0; $v <= 4; $v++) {
-            $pre.= '<div id="'.$this->windows[$winNo][0].'" style="'.($v === 0 ? 'margin-left:'.$marginleft.'%;' : '').'width:'.$this->dec(($this->videoInfo[$this->windows[$winNo][($v+1)]] - $this->videoInfo[$this->windows[$winNo][$v]]) * $widthperc).'%" data-score="'.$this->videoInfo[$this->windows[$winNo][0]].'"></div>';
+            $pre.= '<div id="'.$this->windows[$winNo][$v].'" style="'.($v === 0 ? 'margin-left:'.$marginleft.'%;' : '').'width:'.$this->dec(($this->videoInfo[$this->windows[$winNo][($v+1)]] - $this->videoInfo[$this->windows[$winNo][$v]]) * $widthperc).'%" data-score="'.$this->videoInfo[$this->windows[$winNo][$v]].'"></div>';
         }
         if($winNo === 1 && $this->videoInfo['nohazards'] == 2) {
             $pre.= $this->buildScoreWindow(2);
