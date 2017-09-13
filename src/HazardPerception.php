@@ -51,6 +51,7 @@ class HazardPerception implements HPInterface{
         self::$user = $user;
         self::$template = $template;
         self::$template->addTemplateDir(str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates');
+        if(!session_id()){session_start();}
         if(is_numeric($userID)){$this->userClone = (int) $userID;}
     }
     
@@ -99,7 +100,7 @@ class HazardPerception implements HPInterface{
         else{
             $userProgress = self::$db->select($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()));
             $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
-            return $this->getSessionInfo();
+            return $_SESSION['hptest'.$this->getTestID()];
         }
     }
     
