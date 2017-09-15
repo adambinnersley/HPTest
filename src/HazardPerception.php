@@ -1,6 +1,7 @@
 <?php
 namespace HPTest;
 
+use HPTest\Essential\HPInterface;
 use DBAL\Database;
 use Smarty;
 

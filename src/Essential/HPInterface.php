@@ -1,12 +1,7 @@
 <?php
 
-namespace HPTest;
+namespace HPTest\Essential;
 
-/**
- * Description of HPInterface
- *
- * @author Adams
- */
 interface HPInterface{
     public function createTest();
     public function createHTML($prim);
