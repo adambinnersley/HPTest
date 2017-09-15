@@ -46,12 +46,13 @@ class HazardPerception implements HPInterface{
      * @param Smarty $template This should be the instance of Smarty Templating
      * @param object $user This should be an instance of User class
      * @param int|false If you want to emulate a user set this here
+     * @param string|false If you want to change the template location set this location here else set to false
      */
-    public function __construct(Database $db, Smarty $template, $user, $userID = false) {
+    public function __construct(Database $db, Smarty $template, $user, $userID = false, $templateDir = false) {
         self::$db = $db;
         self::$user = $user;
         self::$template = $template;
-        self::$template->addTemplateDir(str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates');
+        self::$template->addTemplateDir($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir);
         if(!session_id()){session_start();}
         if(is_numeric($userID)){$this->userClone = (int) $userID;}
     }

@@ -7,7 +7,7 @@ use Smarty;
 
 class HPReview {
     protected static $db;
-    protected static $layout;
+    protected static $template;
     protected static $user;
     protected $userClone;
     
@@ -19,16 +19,16 @@ class HPReview {
     /**
      * Connects to the database sets the current user and gets any user answers
      * @param Database $db This needs to be an instance of the database class
-     * @param Smarty $layout This needs to be an instance of the Smarty Templating class
+     * @param Smarty $template This needs to be an instance of the Smarty Templating class
      * @param object $user This should be the user class used
      * @param int|false $userID If you want to emulate a user set the user ID here
      * @param string|false $templateDir If you want to change the template location set this location here else set to false
      */
-    public function __construct(Database $db, Smarty $layout, $user, $userID = false, $templateDir = false) {
+    public function __construct(Database $db, Smarty $template, $user, $userID = false, $templateDir = false) {
         self::$db = $db;
-        self::$layout = $layout;
         self::$user = $user;
-        self::$layout->addTemplateDir($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir);
+        self::$template = $template;
+        self::$template->addTemplateDir($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir);
         if(is_numeric($userID)){$this->userClone = $userID;}
     }
     
