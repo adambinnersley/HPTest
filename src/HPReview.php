@@ -12,7 +12,7 @@ class HPReview {
     protected $userClone;
     
     protected $questionsTable = 'hazard_clips_new';
-    protected $testProgressTable = 'users_hazard_progress_new'; 
+    protected $testProgressTable = 'user_hazard_progress'; 
     
     public $numberOfHPTests = 12;
     
@@ -30,6 +30,13 @@ class HPReview {
         self::$template = $template;
         self::$template->addTemplateDir($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir);
         if(is_numeric($userID)){$this->userClone = $userID;}
+    }
+    
+    /*
+     * Setter Allows table names to be changed if needed
+     */
+    public function __set($name, $value) {
+        if(isset($this->$name)){$this->name = $value;}
     }
     
     /**
