@@ -36,7 +36,7 @@ class HPReview {
      * Setter Allows table names to be changed if needed
      */
     public function __set($name, $value) {
-        if(isset($this->$name)){$this->name = $value;}
+        if(isset($this->$name)){$this->$name = $value;}
     }
     
     /**
