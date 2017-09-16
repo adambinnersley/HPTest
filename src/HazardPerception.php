@@ -13,7 +13,7 @@ class HazardPerception implements HPInterface{
     protected $userprogress = false;
 
     public $videosTable = 'hazard_clips_new';
-    public $progressTable = 'users_hazard_progress_new';
+    public $progressTable = 'user_hazard_progress';
     
     public $testID = 1;
     public $numVideos = 14;
