@@ -16,6 +16,8 @@ class HPReview {
     
     public $numberOfHPTests = 12;
     
+    protected $testType = 'CAR';
+    
     /**
      * Connects to the database sets the current user and gets any user answers
      * @param Database $db This needs to be an instance of the database class
@@ -67,7 +69,7 @@ class HPReview {
      * @return int Returns The number of Hazard Perception tests the user has passed
      */
     public function testsPassed(){
-        return self::$db->count($this->testProgressTable, array('status' => 1, 'user_id' => $this->getUserID()));
+        return self::$db->count($this->testProgressTable, array('status' => 1, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)));
     }
     
     /**
@@ -75,7 +77,7 @@ class HPReview {
      * @return int Returns The number of Hazard Perception tests the user has failed
      */
     public function testsFailed(){
-        return self::$db->count($this->testProgressTable, array('status' => 2, 'user_id' => $this->getUserID()));
+        return self::$db->count($this->testProgressTable, array('status' => 2, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)));
     }
     
     /**
@@ -86,7 +88,7 @@ class HPReview {
         $answers = array();
         for($i = 1; $i <= $this->numberOfHPTests(); $i++){
             unset($_SESSION['hptest'.$i]);
-            $info = self::$db->select($this->testProgressTable, array('user_id' => $this->getUserID(), 'test_id' => $i), array('status', 'progress'));
+            $info = self::$db->select($this->testProgressTable, array('user_id' => $this->getUserID(), 'test_id' => $i, 'test_type' => strtoupper($this->testType)), array('status', 'progress'));
             $answers[$i]['status'] = $info['status'];
             $userprogress = unserialize(stripslashes($info['progress']));
             $answers[$i]['totalscore'] = $userprogress['totalscore'];
