@@ -495,7 +495,7 @@ class HazardPerception implements HPInterface{
             $pre = '';
         }
         for($v = 0; $v <= 4; $v++) {
-            $pre.= '<div id="'.$this->windows[$winNo][$v].'" style="'.($v === 0 ? 'margin-left:'.$marginleft.'%;' : '').'width:'.$this->dec(($this->videoInfo[$this->windows[$winNo][($v+1)]] - $this->videoInfo[$this->windows[$winNo][$v]]) * $widthperc).'%" data-score="'.$this->videoInfo[$this->windows[$winNo][$v]].'"></div>';
+            $pre.= '<div id="'.$this->windows[$winNo][$v].'" style="'.($v === 0 ? 'margin-left:'.$marginleft.'%;' : '').'width:'.$this->dec(($this->videoInfo[$this->windows[$winNo][($v+1)]] - $this->videoInfo[$this->windows[$winNo][$v]]) * $widthperc).'%" data-score="'.$this->videoInfo[$this->windows[$winNo][$v]].'"'.($v === 4 ? ' data-scoreend="'.$this->videoInfo[$this->windows[$winNo][5]].'"' : '').'></div>';
         }
         if($winNo === 1 && $this->videoInfo['nohazards'] == 2) {
             $pre.= $this->buildScoreWindow(2);
