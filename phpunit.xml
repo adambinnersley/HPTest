@@ -24,6 +24,7 @@
         <var name="DB_HOST" value="localhost" />
         <var name="DB_USER" value="root" />
         <var name="DB_PASSWD" value="" />
-        <var name="DB_DBNAME" value="hazard_db" />
+        <var name="DB_DBNAME" value="hptest" />
+        <var name="DRIVER" value="mysql"/>
     </php>
 </phpunit>
