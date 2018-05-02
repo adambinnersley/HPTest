@@ -91,7 +91,7 @@ class HPReview {
             $info = self::$db->select($this->testProgressTable, array('user_id' => $this->getUserID(), 'test_id' => $i, 'test_type' => strtoupper($this->testType)), array('status', 'progress'));
             $answers[$i]['status'] = $info['status'];
             $userprogress = unserialize(stripslashes($info['progress']));
-            $answers[$i]['totalscore'] = $userprogress['score'];
+            $answers[$i]['totalscore'] = $userprogress['totalscore'];
         }
         return $answers;
     }
