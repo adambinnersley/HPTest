@@ -12,8 +12,8 @@ class HazardPerception implements HPInterface{
     protected $userClone = false;
     protected $userprogress = false;
 
-    public $videosTable = 'hazard_clips_new';
-    public $progressTable = 'user_hazard_progress';
+    public $videosTable = 'hazard_clips';
+    public $progressTable = 'users_hazard_progress';
     
     public $testID = 1;
     public $numVideos = 14;
@@ -53,7 +53,11 @@ class HazardPerception implements HPInterface{
         self::$user = $user;
         self::$template = $template;
         self::$template->addTemplateDir($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir);
-        if(!session_id()){session_start();}
+        if(!session_id()){
+            if(defined(SESSION_NAME)){session_name(SESSION_NAME);}
+            session_set_cookie_params(0, '/', '.'.DOMAIN, (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false),  (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false));
+            session_start();
+        }
         if(is_numeric($userID)){$this->userClone = (int) $userID;}
     }
     

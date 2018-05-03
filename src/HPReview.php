@@ -11,8 +11,8 @@ class HPReview {
     protected static $user;
     protected $userClone;
     
-    protected $questionsTable = 'hazard_clips_new';
-    protected $testProgressTable = 'user_hazard_progress'; 
+    protected $questionsTable = 'hazard_clips';
+    protected $testProgressTable = 'users_hazard_progress'; 
     
     public $numberOfHPTests = 12;
     

@@ -7,7 +7,7 @@ class DeleteData {
     protected static $db;
     protected static $user;
 
-    public $testsTable = 'user_hazard_progress';
+    public $testsTable = 'users_hazard_progress';
     
     /**
      * Connects to the database and passes the user class
