@@ -41,7 +41,7 @@ class FreeHazardPerception extends HazardPerception{
      * @param int $testNo This should be the Test ID
      */
     protected function chooseVideos($testNo){
-        $videos = self::$db->selectAll($this->videosTable, array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
+        $videos = $this->db->selectAll($this->config->table_hazard_videos, array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
         if($this->report === false){
             unset($_SESSION['hptest'.$testNo]);
         }
@@ -68,7 +68,7 @@ class FreeHazardPerception extends HazardPerception{
      * @return string Returns the end test report HTML ready to be rendered
      */
     public function endTest($mark){
-        self::$template->assign('free_test', 'Yes', true);
+        $this->template->assign('free_test', 'Yes', true);
         return parent::endTest($mark);
     }
     

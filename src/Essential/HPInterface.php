@@ -21,8 +21,4 @@ interface HPInterface{
     public function getUserType();
     public function setTestType($type);
     public function getTestType();
-    public function setVideoTable($table);
-    public function getVideoTable();
-    public function setProgressTable($table);
-    public function getProgressTable();
 }

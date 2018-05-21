@@ -3,17 +3,17 @@ namespace HPTest;
 
 use HPTest\Essential\HPInterface;
 use DBAL\Database;
+use Configuration\Config;
 use Smarty;
 
 class HazardPerception implements HPInterface{
-    protected static $template;
-    protected static $db;
-    protected static $user;
+    protected $db;
+    protected $config;
+    protected $user;
+    protected $template;
+    
     protected $userClone = false;
     protected $userprogress = false;
-
-    public $videosTable = 'hazard_clips';
-    public $progressTable = 'users_hazard_progress';
     
     public $testID = 1;
     public $numVideos = 14;
@@ -43,16 +43,18 @@ class HazardPerception implements HPInterface{
     /**
      * Sets the required variables for the test to be rendered
      * @param Database $db This should be an instance of Database
+     * @param Config $config This should be the instance of Config
      * @param Smarty $template This should be the instance of Smarty Templating
      * @param object $user This should be an instance of User class
      * @param int|false If you want to emulate a user set this here
      * @param string|false If you want to change the template location set this location here else set to false
      */
-    public function __construct(Database $db, Smarty $template, $user, $userID = false, $templateDir = false) {
-        self::$db = $db;
-        self::$user = $user;
-        self::$template = $template;
-        self::$template->addTemplateDir($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir);
+    public function __construct(Database $db, Config $config, Smarty $template, $user, $userID = false, $templateDir = false) {
+        $this->db = $db;
+        $this->config = $config;
+        $this->user = $user;
+        $this->template = $template;
+        $this->template->addTemplateDir($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir);
         if(!session_id()){
             if(defined(SESSION_NAME)){session_name(SESSION_NAME);}
             session_set_cookie_params(0, '/', '.'.DOMAIN, (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false),  (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false));
@@ -69,7 +71,7 @@ class HazardPerception implements HPInterface{
         if(is_int($this->userClone)){
             return $this->userClone;
         }
-        return self::$user->getUserID();
+        return $this->user->getUserID();
     }
     
     /**
@@ -81,7 +83,7 @@ class HazardPerception implements HPInterface{
      */
     public function createTest($testNo = 1, $report = false, $prim = false) {
         $this->setTestID($testNo);
-        self::$user->checkUserAccess($testNo);
+        $this->user->checkUserAccess($testNo);
         if(!$this->anyCompleteTests() || $this->confirm || $report === true) {
             $this->report = $report;
             if($report === false){$this->chooseVideos($testNo);}
@@ -89,8 +91,8 @@ class HazardPerception implements HPInterface{
             return $this->buildTest($prim);
         }
         else{
-            self::$template->assign('status', $this->testStatus(), true);
-            return self::$template->fetch('test-complete.tpl');
+            $this->template->assign('status', $this->testStatus(), true);
+            return $this->template->fetch('test-complete.tpl');
         }
     }
     
@@ -104,7 +106,7 @@ class HazardPerception implements HPInterface{
             return $this->getSessionInfo();
         }
         else{
-            $userProgress = self::$db->select($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()));
+            $userProgress = $this->db->select($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()));
             $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
             return $_SESSION['hptest'.$this->getTestID()];
         }
@@ -124,10 +126,10 @@ class HazardPerception implements HPInterface{
      * @return void nothing is returned
      */
     protected function chooseVideos($testNo) {
-        $videos = self::$db->selectAll($this->getVideoTable(), array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
+        $videos = $this->db->selectAll($this->config->table_hazard_videos, array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
         if($this->report === false) {
             unset($_SESSION['hptest'.$testNo]);
-            self::$db->delete($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()));
+            $this->db->delete($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()));
         }
         $v = 1;
         foreach($videos as $video) {
@@ -252,42 +254,6 @@ class HazardPerception implements HPInterface{
     }
     
     /**
-     * Sets the table name to look in for the list of videos
-     * @param string $table This should be the table name where the videos are located
-     * @return $this
-     */
-    public function setVideoTable($table) {
-        $this->videosTable = $table;
-        return $this;
-    }
-    
-    /**
-     * Return the videos table where the videos are located
-     * @return string This will be the table name where the videos are
-     */
-    public function getVideoTable() {
-        return $this->videosTable;
-    }
-    
-    /**
-     * Sets the table name where the users progress will be stored
-     * @param string $table Sets the table name where the videos are store
-     * @return $this
-     */
-    public function setProgressTable($table) {
-        $this->progressTable = $table;
-        return $this;
-    }
-    
-    /**
-     * Returns the table where the progress is stored
-     * @return string This is the table where the progress is stored 
-     */
-    public function getProgressTable() {
-        return $this->progressTable;
-    }
-    
-    /**
      * Returns the HTML code for the previous video button
      * @param int $videoID This should be the current video id
      * @return string Returns the previous video button HTML code
@@ -334,7 +300,7 @@ class HazardPerception implements HPInterface{
      * @return array The video information will be returned as an array
      */
     protected function getVideoInfo($videoID) {
-        $this->videoInfo = self::$db->select($this->getVideoTable(), array('id' => $videoID));
+        $this->videoInfo = $this->db->select($this->config->table_hazard_videos, array('id' => $videoID));
         return $this->videoInfo;
     }
     
@@ -445,22 +411,22 @@ class HazardPerception implements HPInterface{
         $this->report = $review;
         if(is_numeric($prim)) {
             $videoInfo = $this->getVideoInfo($prim);
-            self::$template->assign('videotitle', $videoInfo['title']."<br />".$videoInfo['title2']);
-            self::$template->assign('videodesc', nl2br($videoInfo['description']."\r\n\r\n".$videoInfo['description2']));
-            self::$template->assign('no_questions', $this->numVideos);
-            self::$template->assign('your_score', $this->clipScore($prim));
-            self::$template->assign('anti_cheat', $this->anyCheating($prim));
-            self::$template->assign('question_no', $this->currentVideoNo($prim));
-            self::$template->assign('vid_id', $prim);
-            self::$template->assign('video', $this->getVideo($prim));
-            self::$template->assign('prev_question', $this->prevVideo($prim));
-            self::$template->assign('next_question', $this->nextVideo($prim));
-            self::$template->assign('score_window', $this->buildScoreWindow());
-            self::$template->assign('review_flags', $this->getReviewFlags($prim));
-            self::$template->assign('script', $this->getScript());
-            self::$template->assign('testID', $this->getTestID());
+            $this->template->assign('videotitle', $videoInfo['title']."<br />".$videoInfo['title2']);
+            $this->template->assign('videodesc', nl2br($videoInfo['description']."\r\n\r\n".$videoInfo['description2']));
+            $this->template->assign('no_questions', $this->numVideos);
+            $this->template->assign('your_score', $this->clipScore($prim));
+            $this->template->assign('anti_cheat', $this->anyCheating($prim));
+            $this->template->assign('question_no', $this->currentVideoNo($prim));
+            $this->template->assign('vid_id', $prim);
+            $this->template->assign('video', $this->getVideo($prim));
+            $this->template->assign('prev_question', $this->prevVideo($prim));
+            $this->template->assign('next_question', $this->nextVideo($prim));
+            $this->template->assign('score_window', $this->buildScoreWindow());
+            $this->template->assign('review_flags', $this->getReviewFlags($prim));
+            $this->template->assign('script', $this->getScript());
+            $this->template->assign('testID', $this->getTestID());
             
-            $this->videodata = ($this->report === false ? self::$template->fetch('hazlayout.tpl') : self::$template->fetch('hazlayoutreport.tpl'));
+            $this->videodata = ($this->report === false ? $this->template->fetch('hazlayout.tpl') : $this->template->fetch('hazlayoutreport.tpl'));
             return json_encode(array('html' => $this->videodata, 'questionnum' => $this->currentVideoNo($prim)));
         }
         return false;
@@ -480,7 +446,7 @@ class HazardPerception implements HPInterface{
      * @return boolean Returns true if test already exist
      */
     protected function anyCompleteTests() {
-        return self::$db->select($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()));
+        return $this->db->select($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()));
     }
     
     /**
@@ -574,10 +540,10 @@ class HazardPerception implements HPInterface{
         if(!is_numeric($prim)) {$prim = $this->userAnswers[1]['id'];}
         $this->createHTML($prim, $this->report);
         
-        self::$template->assign('question_no', $this->currentVideoNo($prim));
-        self::$template->assign('no_questions', $this->numVideos);
-        self::$template->assign('video_data', $this->videodata);
-        if($this->report === false) {return self::$template->fetch('hazardtest.tpl');}else{return self::$template->fetch('hazardtestreport.tpl');}
+        $this->template->assign('question_no', $this->currentVideoNo($prim));
+        $this->template->assign('no_questions', $this->numVideos);
+        $this->template->assign('video_data', $this->videodata);
+        if($this->report === false) {return $this->template->fetch('hazardtest.tpl');}else{return $this->template->fetch('hazardtestreport.tpl');}
     }
     
     /**
@@ -590,7 +556,7 @@ class HazardPerception implements HPInterface{
         if($this->anyCompleteTests()) {
             return $this->endTest(false);
         }
-        return self::$template->fetch('report'.DIRECTORY_SEPARATOR.'report-unavail.tpl');
+        return $this->template->fetch('report'.DIRECTORY_SEPARATOR.'report-unavail.tpl');
     }
     
     /**
@@ -636,12 +602,12 @@ class HazardPerception implements HPInterface{
             $this->getSessionInfo()['totalscore'] = $score;
             $this->addResultsToDB();
         }
-        self::$template->assign('windows', $windows);
-        self::$template->assign('score', $score);
-        self::$template->assign('passmark', $this->getPassmark());
-        self::$template->assign('videos', $videos);
-        self::$template->assign('testID', $this->getTestID());
-        return self::$template->fetch('hazresult.tpl');
+        $this->template->assign('windows', $windows);
+        $this->template->assign('score', $score);
+        $this->template->assign('passmark', $this->getPassmark());
+        $this->template->assign('videos', $videos);
+        $this->template->assign('testID', $this->getTestID());
+        return $this->template->fetch('hazresult.tpl');
     }
     
     /**
@@ -689,7 +655,7 @@ class HazardPerception implements HPInterface{
      * Inserts the users results into the database
      */
     protected function addResultsToDB() {
-        self::$db->delete($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType())); // Delete old tests
-        self::$db->insert($this->getProgressTable(), array('user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status));
+        $this->db->delete($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType())); // Delete old tests
+        $this->db->insert($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status));
     }
 }
