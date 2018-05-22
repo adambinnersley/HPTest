@@ -21,6 +21,8 @@ class HazardPerceptionTest extends TestCase{
                 'No local database connection is available'
             );
         }
+        self::$db->query(file_get_contents(dirname(dirname(__FILE__)).'/vendor/adamb/user/database/database_mysql.sql'));
+        self::$db->query(file_get_contents(dirname(dirname(__FILE__)).'/database/database_mysql.sql'));
         self::$config = new Config(self::$db);
         self::$user = new User(self::$db);
         self::$hp = new HazardPerception(self::$db, self::$config, new Smarty(), self::$user);
