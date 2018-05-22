@@ -1,3 +1,14 @@
+CREATE TABLE IF NOT EXISTS `config` (
+  `setting` varchar(100) NOT NULL,
+  `value` text NOT NULL,
+  PRIMARY KEY (`setting`),
+  UNIQUE KEY `setting` (`setting`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `config` (`setting`, `value`) VALUES
+('table_hazard_progress', 'users_hazard_progress'),
+('table_hazard_videos', 'hazard_clips');
+
 --
 -- Table structure for table `hazard_clips`
 --
