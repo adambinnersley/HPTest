@@ -27,5 +27,8 @@
         <var name="DB_PASSWD" value="" />
         <var name="DB_DBNAME" value="hptest" />
         <var name="DRIVER" value="mysql"/>
+        
+        <const name="SESSION_NAME" value="ttest" />
+        <const name="DOMAIN" value="mywebsite.co.uk" />
     </php>
 </phpunit>
