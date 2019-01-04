@@ -1,0 +1,514 @@
+#hazardTest{
+    background:#000 !important;
+    color:#fff;
+    overflow:hidden;
+    #questiondata{
+        float:left;
+        margin:0;
+        padding:8px 0 0 15px;
+        width:40px;
+    }
+    #buttons{
+        background:transparent;
+        padding:0 !important;
+        clear:none !important;
+    }
+    #question-content{
+        min-height:0;
+        padding:0 !important;
+    }
+}
+#video_overlay{
+    position:absolute;
+    float:left;
+    width:100%;
+    height:100%;
+    background-color:rgba(#121212, 0.7);
+    color:#fff;
+    font-size:5em;
+    @include media-breakpoint-only(sm){
+        font-size:2.9em;
+    }
+    @include media-breakpoint-only(xs){
+        font-size:2.2em;
+    }
+    text-align:center;
+    z-index:300000;
+    padding:5px 0;
+    #icon{
+        position:absolute;
+        display:block;
+        width:100%;
+        top:40%;
+        left:0;
+        text-align:center;
+    }
+}
+
+.nextvideo, #exittest{
+    width:50px;
+    display:inline-block;
+    cursor:pointer;
+    margin:5px auto 20px;
+    padding:5px;
+    line-height: 1.2em;
+    font-weight:700;
+    display:block;
+    @include media-breakpoint-down(md){
+        display:inline-block;
+        float:right;
+        padding:0;
+        width:85px;
+        height:45px;
+        margin:10px 0 0;
+        text-align:left;
+        line-height:20px;
+    }
+    .showbtn{
+        background-color: #FF3333;
+        border-radius:3px;
+        width:40px;
+        height:40px;
+        font-family:"FontAwesome";
+        font-size:26px;
+        line-height:40px;
+        color:#FFF;
+        margin-bottom:4px;
+        font-weight:normal;
+        text-align:center;
+        &:before{
+            content: $fa-var-power-off;
+        }
+        @include media-breakpoint-down(md){
+            margin:0 4px 0 0;
+            float:left;
+        }
+    }
+    &:hover{
+        color:darken(#FFF, 25%);
+        .showbtn{
+            background-color: darken(#FF3333, 20%);
+        }
+    }
+}
+.nextvideo{
+    .showbtn{
+        background-color: #336699;
+        @include fa-icon-rotate(90deg, 1);
+        &:before{
+            content: $fa-var-level-up;            
+        }
+    }
+    &:hover{
+        .showbtn{
+            background-color: darken(#336699, 12%);
+        }
+    }
+}
+#exittest{
+    
+}
+.vidready{
+    cursor:pointer
+}
+.flagholder{
+    position:relative;
+    margin-top:-6px;
+    z-index:10000000;
+}
+#flags{
+    background:#AAA;
+    width:auto;
+    height:50px !important;
+    display:block;
+    padding:10px !important;
+}
+#scorewindow{
+    margin:10px 2% 0 2%;
+    width:96%;
+    height:20px;
+    display:block;
+}
+#reviewflags{
+    margin:-20px 2% 0 2%;
+    width:96%;
+    height:20px;
+    padding:0;
+    display:block;
+    position:relative;
+}
+#reviewflags img, #flags{
+    border:none !important;
+}
+#progress{
+    position:relative;
+    margin:0 2% 10px 2%;
+    width:96%;
+    height:15px;
+    background:#fff;
+    display:block;
+    cursor:pointer;
+    overflow:hidden;
+}
+.ui-slider-handle{
+    position:absolute;
+    width:0;
+    height:0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 15px solid #369;
+    margin-left:-7px;
+}
+
+#scorewindow div{
+    width:10px;
+    height:20px;
+    display:inline-block;
+}
+#pre1, #pre2{
+    background-color:#E8D91E;
+}
+#five, #ten{
+    background-color:#16B409;
+}
+#four, #nine{
+    background-color:#75F22E;
+}
+#three, #eight{
+    background-color:#CFEF42;
+}
+#two, #seven{
+    background-color:#F8A910;
+}
+#one, #six{
+    background-color:#FE3500;
+}
+
+.colour-2 td, .colour-1 td, .colour0 td, #score-0{
+    background-color:#fff;
+}
+.colour1 td, #score-1{
+    background-color:#DC0201;
+}
+.colour2 td, #score-2{
+    background-color:#FF8901;
+}
+.colour3 td, #score-3{
+    background-color:#CDF145;
+}
+.colour4 td, #score-4{
+    background-color:#55EC21;
+}
+.colour5 td, #score-5{
+    background-color:#0FBB03;
+}
+tr[class*='colour']:hover td{
+    background-color:#7194B8;
+    cursor:pointer;
+}
+
+.reportbuttons{
+    height:70px;
+}
+#resultinfo{
+    font-weight:700;
+    font-size:1.15em;
+    margin-top:12px;
+}
+.clip-info{
+    color:#fff;
+    font-weight:700;
+    font-size:1.15em;
+    margin-top:4px;
+    text-align:center;
+    display:block;
+    margin:0 auto;
+}
+.videoid{
+    position:relative;
+    @include media-breakpoint-up(lg){
+        margin-top:-29px;
+    }
+}
+.report #questiondata{
+    width:180px;
+    padding:0 10px;
+    line-height:1.1em;
+    float:left;
+}
+.videocontrols{
+    vertical-align:top;
+    padding:0;
+}
+.report{
+    .prevvideo, .nextvideo, #exittest, #quarterspeed .speed, #halfspeed .speed, #fullspeed .speed, .reportbtn{
+        width:26px;
+        height:26px;
+        line-height:26px;
+        font-size:16px;
+        display:inline-block;
+        border-radius:3px;
+        margin:10px 5px 0 0;
+        padding:0;
+        cursor:pointer;
+        vertical-align:top;
+        font-weight:700;
+        color:#FFF;
+        font-family:"FontAwesome";
+        background:#336699;
+        text-align:center;
+        &:before{
+            font-weight:normal;
+        }
+        &:hover{
+            color:darken(#FFF, 20%);
+            background-color: darken(#336699, 10%);
+        }
+        &:hover, &:focus{text-decoration: none;}
+    }
+    .prevvideo, .nextvideo, #exittest{
+        span{
+            display:none
+        }
+    }
+    .prevvideo{
+        &:before{
+            content: $fa-var-chevron-left;
+        }
+    }
+    .nextvideo{
+        &:before{
+            content: $fa-var-chevron-right;
+        }
+    }
+    .videoid{
+        @include media-breakpoint-up(lg){
+            margin-top:0;
+        }
+    }
+    #exittest{
+        background-color:#FF3333;
+        margin-left:20px;
+        &:before{
+            content: $fa-var-times;
+        }
+        &:hover{
+            background-color: darken(#FF3333, 20%);
+        }
+    }
+    #playvideo{
+        display:inline-block;
+        width:46px;
+        font-weight:700;
+        cursor:pointer;
+        .reportbtn{
+            display:block;
+            margin:0 auto 3px;
+            background-color:#99CC33;
+            color:#000;
+            &:before{
+                content: $fa-var-play;
+            }
+            &:hover{
+                
+            }
+        }
+        &:hover{
+            .reportbtn{
+                color:lighten(#000, 15%);
+                background-color: darken(#99CC33, 10%);
+            }
+        }
+        &.playing{
+            .reportbtn{
+                background-color:#CCCC33;
+                &:before{
+                    content: $fa-var-pause;
+                }
+            }
+            &:hover{
+                .reportbtn{
+                    background-color: darken(#CCCC33, 10%);
+                }
+            }
+        }
+    }
+    #pausevideo{
+        display:inline-block;
+        margin-left:8px;
+        font-weight:700;
+        cursor:pointer;
+        .reportbtn{
+            display:block;
+            margin:0 auto;
+            color:#000;
+            background-color:#FF9933;
+            &:before{
+                content: $fa-var-pause;
+            }
+        }
+        &.pauseactive{
+            .reportbtn{
+                color:#390;
+                &:before{
+                    content: $fa-var-check;
+                }
+            }
+        }
+        &:hover{
+            .reportbtn{
+                color:lighten(#000, 15%);
+                background-color: darken(#FF9933, 10%);
+            }
+        }
+    }
+    #quarterspeed, #halfspeed, #fullspeed{
+        display:inline-block;
+        margin:10px 10px 0 0;
+        cursor:pointer;
+        font-weight:700;
+        text-align:center;
+        .speed{
+            display:block;
+            padding:0;
+            margin:0;
+        }
+    }
+    #quarterspeed .speed{
+
+    }
+    #halfspeed .speed{
+        background-color:#72008A;
+        &:hover{
+            background-color:darken(#72008A, 10%);
+        }
+    }
+    #fullspeed .speed{
+        background-color:#0FBB03;
+        &:hover{
+            background-color:darken(#0FBB03, 10%);
+        }
+    }
+    .controltext{
+        color:#FFF;
+        line-height:1em;
+        display:block;
+        text-align:center !important;
+    }
+}
+#hazardscore{
+    width:200px;
+    display:inline-block;
+    text-align:center;
+    vertical-align:top;
+    @include media-breakpoint-only(sm){
+        width:150px;
+    }
+    @include media-breakpoint-only(xs){
+        width:100px;
+    }
+}
+#scorenum{
+    font-size:2.5em;
+}
+#clickevent{
+    float:right;
+    width:100px;
+    height:65px;
+    background:url('/images/theory/mouse-click.png') 0 0 no-repeat;
+    display:inline-block;
+}
+.clickedevent{
+    background-position:-101px 0!important;
+}
+.yourscore, #anticheat{
+    font-weight:700;
+    text-align:center;
+    font-size:1.1em;
+}
+.yourscore{
+    color:#E8D91E;
+}
+#anticheat{
+    color:#DC0201;
+    font-size:1.5em;
+    letter-spacing:2px;
+}
+.selectedspeed{
+    box-shadow:0 0 4px 2px #eee;
+    border-radius:3px;
+}
+
+.styled{
+    color:#000;
+}
+
+.clipanaysis{
+    font-weight:700;
+    padding-bottom:30px;
+}
+#score-analysis{
+    width:100%;
+    display:inline-block;
+    border:1px solid #000;
+    position:relative;
+}
+#score-analysis #car{
+    width:68px;
+    height:35px;
+    background:url('/images/theory/car-marker.png') top left no-repeat;
+    position:absolute;
+    display:block;
+    margin-left:-34px;
+    padding-top:80px;
+}
+#score-0, #score-1, #score-2, #score-3, #score-4, #score-5{
+    width:16.66666%;
+    height:80px;
+    display:inline-block;
+    margin:0;
+    padding:0;
+    float:left;
+}
+
+.passmark{
+    font-size:1.2em;
+    font-weight:500;
+}
+.havepassed{
+    clear:both;
+    display:block;
+    text-align:center;
+    font-size:1.5em;
+    text-transform:uppercase;
+    border:1px solid;
+    margin:8px 0;
+    padding:6px 0;
+}
+.hp-failed{
+    border-color:#c00;
+    background-color:#F99;
+}
+.hp-passed{
+    border-color:#0FBB03;
+    background-color:#CDF145;
+}
+
+.reviewflag{
+    position:absolute;
+}
+
+video{
+    max-width:100%;
+    width:100%;
+    height:auto;
+    margin:0;
+    padding:0;
+}
+
+.IIV::-webkit-media-controls-play-button,
+.IIV::-webkit-media-controls-start-playback-button {
+    opacity: 0;
+    pointer-events: none;
+    width: 5px;
+}
