@@ -1,3 +1,5 @@
+@import "variables";
+
 #hazardTest{
     background:#000 !important;
     color:#fff;
@@ -69,7 +71,7 @@
         border-radius:3px;
         width:40px;
         height:40px;
-        font-family:"FontAwesome";
+        font-family:$hp-font-family;
         font-size:26px;
         line-height:40px;
         color:#FFF;
@@ -77,7 +79,7 @@
         font-weight:normal;
         text-align:center;
         &:before{
-            content: $fa-var-power-off;
+            content: $hp-icon-exit;
         }
         @include media-breakpoint-down(md){
             margin:0 4px 0 0;
@@ -96,7 +98,7 @@
         background-color: #336699;
         @include fa-icon-rotate(90deg, 1);
         &:before{
-            content: $fa-var-level-up;            
+            content: $hp-icon-skip;            
         }
     }
     &:hover{
@@ -254,7 +256,7 @@ tr[class*='colour']:hover td{
         vertical-align:top;
         font-weight:700;
         color:#FFF;
-        font-family:"FontAwesome";
+        font-family:$hp-font-family;
         background:#336699;
         text-align:center;
         &:before{
@@ -273,12 +275,12 @@ tr[class*='colour']:hover td{
     }
     .prevvideo{
         &:before{
-            content: $fa-var-chevron-left;
+            content: $hp-icon-prev;
         }
     }
     .nextvideo{
         &:before{
-            content: $fa-var-chevron-right;
+            content: $hp-icon-next;
         }
     }
     .videoid{
@@ -290,7 +292,7 @@ tr[class*='colour']:hover td{
         background-color:#FF3333;
         margin-left:20px;
         &:before{
-            content: $fa-var-times;
+            content: $hp-icon-close;
         }
         &:hover{
             background-color: darken(#FF3333, 20%);
@@ -307,7 +309,7 @@ tr[class*='colour']:hover td{
             background-color:#99CC33;
             color:#000;
             &:before{
-                content: $fa-var-play;
+                content: $hp-icon-play;
             }
             &:hover{
                 
@@ -323,7 +325,7 @@ tr[class*='colour']:hover td{
             .reportbtn{
                 background-color:#CCCC33;
                 &:before{
-                    content: $fa-var-pause;
+                    content: $hp-icon-pause;
                 }
             }
             &:hover{
@@ -344,14 +346,14 @@ tr[class*='colour']:hover td{
             color:#000;
             background-color:#FF9933;
             &:before{
-                content: $fa-var-pause;
+                content: $hp-icon-pause;
             }
         }
         &.pauseactive{
             .reportbtn{
                 color:#390;
                 &:before{
-                    content: $fa-var-check;
+                    content: $hp-icon-check;
                 }
             }
         }
@@ -415,7 +417,7 @@ tr[class*='colour']:hover td{
     float:right;
     width:100px;
     height:65px;
-    background:url('/images/theory/mouse-click.png') 0 0 no-repeat;
+    background:url('#{$hp-image-location}mouse-click.png') 0 0 no-repeat;
     display:inline-block;
 }
 .clickedevent{
@@ -456,7 +458,7 @@ tr[class*='colour']:hover td{
 #score-analysis #car{
     width:68px;
     height:35px;
-    background:url('/images/theory/car-marker.png') top left no-repeat;
+    background:url('#{$hp-image-location}car-marker.png') top left no-repeat;
     position:absolute;
     display:block;
     margin-left:-34px;
