@@ -31,7 +31,7 @@ class HPReview {
         $this->config = $config;
         $this->user = $user;
         $this->template = $template;
-        $this->template->addTemplateDir($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir);
+        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir), 'hazard');
         if(is_numeric($userID)){$this->userClone = $userID;}
     }
     
