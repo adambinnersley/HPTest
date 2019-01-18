@@ -15,7 +15,7 @@ class ADIHazardPerception extends HazardPerception{
      * @return string Returns the required JavaScript files as a HTML code string ready to be output
      */
     protected function getScript(){
-        if($this->report == false){return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-perception-'.$this->scriptVar.'.js"></script>';}
-        else{return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js"></script>';}
+        if($this->report == false){return $this->getJavascriptLocation().'hazard-perception-'.$this->scriptVar.'.js';}
+        else{return $this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js';}
     }
 }

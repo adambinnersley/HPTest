@@ -25,13 +25,14 @@ class HPReview {
      * @param object $user This should be the user class used
      * @param int|false $userID If you want to emulate a user set the user ID here
      * @param string|false $templateDir If you want to change the template location set this location here else set to false
+     * @param string $theme If the template directory is not set set the default theme directory (Currently: bootstrap or bootstrap4)
      */
-    public function __construct(Database $db, Config $config, Smarty $template, $user, $userID = false, $templateDir = false) {
+    public function __construct(Database $db, Config $config, Smarty $template, $user, $userID = false, $templateDir = false, $theme = 'bootstrap') {
         $this->db = $db;
         $this->config = $config;
         $this->user = $user;
         $this->template = $template;
-        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir), 'hazard');
+        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates'.DS.$theme : $templateDir), 'hazard');
         if(is_numeric($userID)){$this->userClone = $userID;}
     }
     

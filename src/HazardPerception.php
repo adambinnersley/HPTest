@@ -48,13 +48,14 @@ class HazardPerception implements HPInterface{
      * @param object $user This should be an instance of User class
      * @param int|false If you want to emulate a user set this here
      * @param string|false If you want to change the template location set this location here else set to false
+     * @param string If the template directory is not set set the default theme directory (Currently: bootstrap or bootstrap4)
      */
-    public function __construct(Database $db, Config $config, Smarty $template, $user, $userID = false, $templateDir = false) {
+    public function __construct(Database $db, Config $config, Smarty $template, $user, $userID = false, $templateDir = false, $theme = 'bootstrap') {
         $this->db = $db;
         $this->config = $config;
         $this->user = $user;
         $this->template = $template;
-        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates' : $templateDir), 'hazard');
+        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates'.DS.$theme : $templateDir), 'hazard');
         if(!session_id()){
             if(defined(SESSION_NAME)){session_name(SESSION_NAME);}
             session_set_cookie_params(0, '/', '.'.DOMAIN, (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false),  (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false));
@@ -256,30 +257,23 @@ class HazardPerception implements HPInterface{
     /**
      * Returns the HTML code for the previous video button
      * @param int $videoID This should be the current video id
-     * @return string Returns the previous video button HTML code
+     * @return string|int Returns the previous video id or none
      */
     protected function prevVideo($videoID) {
         $prevID = ($this->currentVideoNo($videoID) - 1);
-        if($prevID >= 1) {$vidID = $this->getSessionInfo()['videos'][$prevID];}
-        else{$vidID = 'none';}
-        return '<div id="'.$vidID.'" class="prevvideo"><span>Prev Clip</span></div>';
+        if($prevID >= 1) {return $this->getSessionInfo()['videos'][$prevID];}
+        return 'none';
     }
     
     /**
      * Returns the HTML code for the next video button
      * @param int $videoID This should be the current video id
-     * @return string Returns the next video button HTML code
+     * @return string|int Returns the next video id or none
      */
     protected function nextVideo($videoID) {
         $nextID = ($this->currentVideoNo($videoID) + 1);
-        if($nextID <= 14) {$vidID = $this->getSessionInfo()['videos'][$nextID];}
-        else{$vidID = 'none';}
-        if(filter_input(INPUT_GET, 'review')) {
-            return '<div id="'.$vidID.'" class="nextvideo"><span class="sr-only">Skip Clip</span></div>';
-        }
-        else{
-            return '<div id="'.$vidID.'" class="nextvideo"><div class="showbtn"></div>Skip Clip</div>';
-        }
+        if($nextID <= 14) {return $this->getSessionInfo()['videos'][$nextID];}
+        return 'none';
     }
     
     /**
@@ -317,20 +311,21 @@ class HazardPerception implements HPInterface{
     /**
      * Gets the video information and puts in into a string of HTML code ready to render
      * @param int $videoID This should be the ID of the video you wish to get the HTML code for
-     * @return string Returns the HTML code as a string for the given video
+     * @return array Returns the video information
      */
     private function getVideo($videoID) {
-        $videoName = $this->getVideoName($videoID);
-        return '<div id="video_overlay"><div id="icon"><img src="/images/hloading.gif" alt="Loading" width="100" height="100" /></div></div><video width="544" height="408" id="video" class="video" data-duration="'.$this->videoInfo['endClip'].'" preload="auto" muted playsinline webkit-playsinline><source src="'.$this->videoLocation.'mp4/'.$videoName.'.mp4" type="video/mp4" /><source src="'.$this->videoLocation.'ogv/'.$videoName.'.ogv" type="video/ogg" /></video>';
+        $this->videoInfo['videoLocation'] = $this->videoLocation;
+        $this->videoInfo['videoName'] = $this->getVideoName($videoID);
+        return $this->videoInfo;
     }
     
     /**
      * Returns the required JavaScript files as a HTML code string
-     * @return string Returns the required JavaScript files as a HTML code string ready to be output
+     * @return string Returns the required JavaScript file location
      */
     protected function getScript() {
-        if($this->report === false) {return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-perception-'.$this->scriptVar.'.js"></script>';}
-        else{return '<script type="text/javascript" src="'.$this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js"></script>';}
+        if($this->report === false) {return $this->getJavascriptLocation().'hazard-perception-'.$this->scriptVar.'.js';}
+        else{return $this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js';}
     }
     
     /**

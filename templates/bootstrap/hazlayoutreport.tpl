@@ -6,7 +6,7 @@
             <div class="col-md-12 reportheader">
                 <div class="row">
                     <div class="col-md-3 reportbuttons">
-                        {$prev_question} {$next_question} <a href="?report=true&amp;id={$smarty.get.review}" id="exittest"><span>Exit Test</span></a>
+                        <div id="{$prev_question}" class="prevvideo"><span>Prev Clip</span></div>{$prev_question} <div id="{$next_question}" class="nextvideo"><span class="sr-only">Skip Clip</span></div> <a href="?report=true&amp;id={$smarty.get.review}" id="exittest"><span>Exit Test</span></a>
                         <div><strong>Clip <span id="qnum">{$question_no}</span> of <span id="totalq">{$no_questions}</span></strong></div>
                     </div>
                     <div class="col-md-9 col-sm-12 text-center" id="resultinfo">{$videotitle}</div>
@@ -38,6 +38,6 @@
         </div>
     </div>
 </div>
-{$script}
+<script type="text/javascript" src="{$script}"></script>
 {/nocache}
 {/strip}
