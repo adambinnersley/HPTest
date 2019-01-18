@@ -473,33 +473,36 @@ class HazardPerception implements HPInterface{
     /**
      * Returns the flags to be displayed on the score window
      * @param int $videoID The video ID to get the score window for
-     * @return string This should be the flay with the styling added to the HTML code
+     * @return array|false This should be the flag information for margin-left and click
      */
     protected function getReviewFlags($videoID) {
         $clicks = unserialize($this->getSessionInfo()[$this->currentVideoNo($videoID)]['clicks']);
-        $flags = '';
         if(is_array($clicks)) {
+            $flags = [];
             foreach($clicks as $i => $click) {
-                $marginleft = ((($click / $this->videoInfo['endClip']) * 100) - 0.4);
-                $flags.= '<img src="/images/hpflag.png" alt="Flag" width="20" height="20" id="flag'.($i + 1).'" class="reviewflag" style="left:'.$marginleft.'%" data-click="'.$click.'" />';
+                $flags[($i + 1)] = [
+                    'margin-left' => ((($click / $this->videoInfo['endClip']) * 100) - 0.4),
+                    'click' => $click
+                ];
             }
+            return $flags;
         }
-        return $flags;
+        return false;
     }
     
     /**
      * Will return the score HTML code test
      * @param int $prim The video ID you are getting the score HTML for
-     * @return string Returns the score text HTML code
+     * @return array Returns the score marks as an array item per hazard
      */
     protected function clipScore($prim) {
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
         $vidInfo = $this->getVideoInfo($prim);
-        if($this->getSessionInfo()[$clipNo]['score'] < 0) {$score = 0;}
-        else{$score = $this->getSessionInfo()[$clipNo]['score'];}
-        if($vidInfo['nohazards'] == 1) {return '<div class="yourscore">You scored '.intval($score).' for this hazard</div>';}
-        else{return '<div class="yourscore">You scored '.intval($score).' for the first hazard and '.intval($this->getSessionInfo()['second_score']).' for the second hazard</div>';}
+        if($this->getSessionInfo()[$clipNo]['score'] < 0) {$score[] = 0;}
+        else{$score[] = intval($this->getSessionInfo()[$clipNo]['score']);}
+        if($vidInfo['nohazards'] != 1) {$score[] = intval($this->getSessionInfo()['second_score']);}
+        return $score;
     }
     
     /**
@@ -510,7 +513,7 @@ class HazardPerception implements HPInterface{
     protected function anyCheating($prim) {
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
-        if($this->getSessionInfo()[$clipNo]['score'] == -1) {return '<div id="anticheat">Anti-Cheat Activated</div>';}
+        if($this->getSessionInfo()[$clipNo]['score'] == -1) {return true;}
         return false;
     }
     

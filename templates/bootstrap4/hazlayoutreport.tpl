@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-3 text-center">{$videodesc|strip}</div> 
                     <div class="col-md-9">
-                        <div id="{$vid_id}" class="videoid text-center">{$your_score}<div class="embed-responsive embed-responsive-4by3">{$video}</div>{$anti_cheat}</div>
+                        <div id="{$vid_id}" class="videoid text-center"><div class="yourscore">You scored {$your_score.0}{if $your_score|@count == 1} for this hazard{else} for the first hazard and {$your_score.1} for the second hazard{/if}</div><div class="embed-responsive embed-responsive-4by3">{$video}</div>{if $anti_cheat}<div id="anticheat">Anti-Cheat Activated</div>{/if}</div>
                         <div class="videocontrols col-md-12">
                             <div id="playvideo"><div class="reportbtn"></div><div class="controltext">Play</div></div><div id="pausevideo"><div class="reportbtn"></div><div class="controltext">Pause<br />5,4,3,2,1</div></div>
                             <div id="hazardscore">Score window<div id="scorenum">0</div></div>
@@ -31,7 +31,8 @@
             <div class="col-md-12">
                 <div class="row">
                     <div id="scorewindow">{$score_window}</div>
-                    <div id="reviewflags">{$review_flags}</div>
+                    {if $review_flags|is_array}<div id="reviewflags">{foreach $review_flags as $f => $flag}<img src="/images/hpflag.png" alt="Flag" width="20" height="20" id="flag{$f}" class="reviewflag" style="left:{$flag.margin-left}%" data-click="{$flag.click}" />{/foreach}</div>{/if}
+                    <div id="progress"></div>
                     <div id="progress"></div>
                 </div>
             </div>
