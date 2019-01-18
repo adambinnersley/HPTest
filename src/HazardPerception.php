@@ -314,8 +314,8 @@ class HazardPerception implements HPInterface{
      * @return array Returns the video information
      */
     private function getVideo($videoID) {
-        $this->videoInfo['videoLocation'] = $this->videoLocation;
         $this->videoInfo['videoName'] = $this->getVideoName($videoID);
+        $this->videoInfo['videoLocation'] = $this->getVidLocation();
         return $this->videoInfo;
     }
     
