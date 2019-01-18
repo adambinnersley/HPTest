@@ -3,11 +3,11 @@ $hp-font-weight: 900 !default;
 
 $hp-image-location: "/images/theory/" !default;
 
-$hp-icon-exit : $fa-var-power-off !default;
-$hp-icon-skip : $fa-var-level-up !default;
-$hp-icon-prev : $fa-var-chevron-left !default;
-$hp-icon-next : $fa-var-chevron-right !default;
-$hp-icon-close : $fa-var-times !default;
-$hp-icon-play : $fa-var-play !default;
-$hp-icon-pause : $fa-var-pause !default;
-$hp-icon-check : $fa-var-check !default;
+$hp-icon-exit : fa-content($fa-var-power-off) !default;
+$hp-icon-skip : fa-content($fa-var-level-up) !default;
+$hp-icon-prev : fa-content($fa-var-chevron-left) !default;
+$hp-icon-next : fa-content($fa-var-chevron-right) !default;
+$hp-icon-close : fa-content($fa-var-times) !default;
+$hp-icon-play : fa-content($fa-var-play) !default;
+$hp-icon-pause : fa-content($fa-var-pause) !default;
+$hp-icon-check : fa-content($fa-var-check) !default;
