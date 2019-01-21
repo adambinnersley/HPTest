@@ -6,14 +6,14 @@
             <li class="previous"><a href="hazard">&larr; Back to Hazard Tests</a></li>
         </ul>
         <div class="havepassed hp-{if $score < $passmark}failed{else}passed{/if}">You have {if $score < $passmark}failed{else}passed{/if} this time</div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card mb-3 border-primary">
+            <div class="card-header bg-primary text-bold p-2">
                 <div class="row">
                 <div class="passmark col-md-6">The pass mark for this test was {$passmark}</div>
                 <div class="passmark col-md-6 text-right">You have scored {$score} points out of a possible 75</div>
                 </div>
             </div>
-            <table class="table table-bordered styled resultstable" id="{$testID}">
+            <table class="table table-bordered styled resultstable mb-0" id="{$testID}">
             <thead>
             <tr>
             <th class="text-center" style="width:50px">Test</th>
