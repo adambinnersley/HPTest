@@ -115,7 +115,7 @@ function loadVideo(videoid){
         endTest();
     }
     else{
-        $.get('/modules/<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&review=true&video=' + videoid, function(data){
+        $.get('<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&review=true&video=' + videoid, function(data){
             data = $.parseJSON(data);
             $("#question").html(data.html);
             $("#qnum").html(data.questionnum);
@@ -124,7 +124,7 @@ function loadVideo(videoid){
 }
 
 function endTest(){
-    window.location = '<?php if($page == "freehazupdate"){echo("/free-hazard-perception-test-demo.htm");}else{echo("/tests/hazard.htm");} ?>?report=true&id=' + $("#question-content").attr("data-test");
+    window.location = '<?php echo($location); ?>?report=true&id=' + $("#question-content").attr("data-test");
 }
 
 function detectPauseAlert(number, num){

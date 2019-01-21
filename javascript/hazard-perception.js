@@ -18,7 +18,7 @@ myVideo.oncanplaythrough = function(){
 
 try{
     myVideo.addEventListener('waiting', function() {
-        $("#icon").html('<img src="/images/hloading.gif" alt="Loading" width="100" height="100" />');
+        $("#icon").html('<img src="<?php if($imgDir){echo($imgDir);}else{echo("/images/");} ?>}hloading.gif" alt="Loading" width="100" height="100" />');
         $("#video_overlay").show();
         myVideo.pause();
         try{
@@ -112,7 +112,7 @@ function loadVideo(videoid, skipped){
     delete makeVideoPlayableInline;
     if(videoid === 'none'){
         if(skipped === true){
-            $.get('/modules/<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&skipped=true&skipid=' + $(".videoid").attr('id'), function(){endTest();});
+            $.get('<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&skipped=true&skipid=' + $(".videoid").attr('id'), function(){endTest();});
         }
         else{
             endTest();
@@ -120,8 +120,8 @@ function loadVideo(videoid, skipped){
     }
     else{
         //if(skipped === true){var extra = '&skipped=true&skipid=' + $(".videoid").attr('id');}else{var extra = '';}
-        //$.get('/modules/<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&video=' + videoid + extra, function(data){
-            window.location = '<?php if($page == "freehazupdate"){echo("/free-hazard-perception-test-demo.htm");}else{echo("/tests/hazard.htm");} ?>?test=' + $("#question-content").attr("data-test") + '&video=' + videoid + '&continue=true#content';
+        //$.get('<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&video=' + videoid + extra, function(data){
+            window.location = '<?php echo($location); ?>?test=' + $("#question-content").attr("data-test") + '&video=' + videoid + '&continue=true#content';
             /*data = $.parseJSON(data);
             $("#question").html(data.html);
             $("#qnum").html(data.questionnum);*/
@@ -131,8 +131,8 @@ function loadVideo(videoid, skipped){
 
 function endTest(){
     testended = true;
-    $.get('/modules/<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&endtest=true', function(){
-        window.location = '<?php if($page == "freehazupdate"){echo("/free-hazard-perception-test-demo.htm");}else{echo("/tests/hazard.htm");} ?>?report=true&id=' + $("#question-content").attr("data-test");
+    $.get('<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&endtest=true', function(){
+        window.location = '<?php echo($location); ?>?report=true&id=' + $("#question-content").attr("data-test");
     });
 }
 
@@ -173,7 +173,7 @@ function rapidClickTest(){
 }
 
 function cheatDetected(){
-    $.get("/modules/<?php echo($page); ?>?testid=" + $("#question-content").attr("data-test") + "&cheatdetected=" + $(".videoid").attr('id'), function(){
+    $.get("<?php echo($page); ?>?testid=" + $("#question-content").attr("data-test") + "&cheatdetected=" + $(".videoid").attr('id'), function(){
         alert("You responded to this clip in an unacceptable manner.\r\n\r\n" + vidError + "\r\n\r\nYou will score 0 for this clip.");
     });
 }
@@ -181,7 +181,7 @@ function cheatDetected(){
 function addFlagInfo(clicktime, video){
     if(process === false){
         process = true;
-        $.get("/modules/<?php echo($page); ?>?testid=" + $("#question-content").attr("data-test") + "&addflag=" + clicktime + "&question=" + video, function(){
+        $.get("<?php echo($page); ?>?testid=" + $("#question-content").attr("data-test") + "&addflag=" + clicktime + "&question=" + video, function(){
             clicks.push(clicktime);
             if(clickPatternTest() || totalClickTest() || rapidClickTest()){
                 myVideo.currentTime = myVideo.duration;
@@ -230,7 +230,7 @@ setInterval(function(){
     }
     if($("#video_overlay").is(":hidden")){
         if(myVideo.paused || myVideo.waiting){
-            $("#icon").html('<img src="/images/hloading.gif" alt="Loading" width="100" height="100" />');
+            $("#icon").html('<img src="<?php if($imgDir){echo($imgDir);}else{echo("/images/");} ?>hloading.gif" alt="Loading" width="100" height="100" />');
             $("#video_overlay").show();
         }
     }
