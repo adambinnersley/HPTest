@@ -18,7 +18,7 @@ myVideo.oncanplaythrough = function(){
 
 try{
     myVideo.addEventListener('waiting', function() {
-        $("#icon").html('<img src="<?php if($imgDir){echo($imgDir);}else{echo("/images/");} ?>}hloading.gif" alt="Loading" width="100" height="100" />');
+        $("#icon").html('<img src="<?php if($imgDir){echo($imgDir);}else{echo("/images/");} ?>hloading.gif" alt="Loading" width="100" height="100" />');
         $("#video_overlay").show();
         myVideo.pause();
         try{
