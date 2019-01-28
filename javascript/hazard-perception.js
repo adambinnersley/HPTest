@@ -56,7 +56,7 @@ myVideo.addEventListener('ended', function(){
 
 $("#video").click(function(){
     if(!myVideo.paused){
-        $("#flags").append('<img src="/images/hpflag.png" alt="Flag" width="30" height="30" />');
+        $("#flags").append('<img src="<?php if($imgDir){echo($imgDir);}else{echo("/images/");} ?>hpflag.png" alt="Flag" width="30" height="30" />');
         addFlagInfo(myVideo.currentTime.toFixed(2), $(".videoid").attr('id'));
     }
 });
