@@ -1,7 +1,7 @@
 {strip}
 <div class="row">
     <div class="col-lg-12">
-        <table class="table table-striped table-bordered table-sm">
+        <table class="table table-striped table-bordered table-sm table-hover">
             <thead>
             <tr>
                 <th>Hazard Perception Test</th>
