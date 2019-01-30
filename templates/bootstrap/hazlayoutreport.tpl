@@ -31,7 +31,7 @@
             <div class="col-md-12">
                 <div class="row">
                     <div id="scorewindow">{$score_window}</div>
-                    {if $review_flags|is_array}<div id="reviewflags">{foreach $review_flags as $f => $flag}<img src="/images/hpflag.png" alt="Flag" width="20" height="20" id="flag{$f}" class="reviewflag" style="left:{$flag.margin-left}%" data-click="{$flag.click}" />{/foreach}</div>{/if}
+                    {if $review_flags|is_array}<div id="reviewflags">{foreach $review_flags as $f => $flag}<img src="{$imagePath}hpflag.png" alt="Flag" width="20" height="20" id="flag{$f}" class="reviewflag" style="left:{$flag.margin-left}%" data-click="{$flag.click}" />{/foreach}</div>{/if}
                     <div id="progress"></div>
                 </div>
             </div>

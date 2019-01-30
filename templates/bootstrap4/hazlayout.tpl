@@ -11,7 +11,7 @@
             <div class="embed-responsive embed-responsive-4by3">
                 <div id="video_overlay">
                     <div id="icon">
-                        <img src="/images/hloading.gif" alt="Loading" width="100" height="100" />
+                        <img src="{$imagePath}hloading.gif" alt="Loading" width="100" height="100" />
                     </div>
                 </div>
                 <video width="544" height="408" id="video" class="video embed-responsive-item" data-duration="{$video.endClip}" preload="auto" muted playsinline webkit-playsinline>

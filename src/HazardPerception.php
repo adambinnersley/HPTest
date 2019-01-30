@@ -23,8 +23,9 @@ class HazardPerception implements HPInterface{
     protected $status;
     
     public $javascriptLocation = '/js/theory/';
-    
     public $videoLocation = '/videos/';
+    public $imgLocation = '/images/';
+    
     protected $videoInfo;
     protected $videodata;
     protected $scriptVar = 'hazupdate';
@@ -216,6 +217,24 @@ class HazardPerception implements HPInterface{
      */
     public function getJavascriptLocation() {
         return $this->javascriptLocation;
+    }
+    
+    /**
+     * Sets the location for any image files
+     * @param string $location This should either be the URL or the relative path of the image directory 
+     * @return $this
+     */
+    public function setImageLocation($location) {
+        $this->imgLocation = $location;
+        return $this;
+    }
+    
+    /**
+     * Returns the image directory path
+     * @return string Returns the image directory path
+     */
+    public function getImageLocation() {
+        return $this->imgLocation;
     }
     
     /**
@@ -541,6 +560,7 @@ class HazardPerception implements HPInterface{
         $this->template->assign('question_no', $this->currentVideoNo($prim));
         $this->template->assign('no_questions', $this->numVideos);
         $this->template->assign('video_data', $this->videodata);
+        $this->template->assign('imagePath', $this->getImageLocation());
         if($this->report === false) {return $this->template->fetch('hazardtest.tpl');}else{return $this->template->fetch('hazardtestreport.tpl');}
     }
     
