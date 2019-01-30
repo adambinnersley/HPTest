@@ -439,6 +439,7 @@ class HazardPerception implements HPInterface{
             $this->template->assign('review_flags', $this->getReviewFlags($prim));
             $this->template->assign('script', $this->getScript());
             $this->template->assign('testID', $this->getTestID());
+            $this->template->assign('imagePath', $this->getImageLocation());
             
             $this->videodata = ($this->report === false ? $this->template->fetch('hazlayout.tpl') : $this->template->fetch('hazlayoutreport.tpl'));
             return json_encode(array('html' => $this->videodata, 'questionnum' => $this->currentVideoNo($prim)));
@@ -560,7 +561,6 @@ class HazardPerception implements HPInterface{
         $this->template->assign('question_no', $this->currentVideoNo($prim));
         $this->template->assign('no_questions', $this->numVideos);
         $this->template->assign('video_data', $this->videodata);
-        $this->template->assign('imagePath', $this->getImageLocation());
         if($this->report === false) {return $this->template->fetch('hazardtest.tpl');}else{return $this->template->fetch('hazardtestreport.tpl');}
     }
     
