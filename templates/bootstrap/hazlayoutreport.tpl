@@ -16,7 +16,19 @@
                 <div class="row">
                     <div class="col-md-3 text-center">{$videodesc|strip}</div> 
                     <div class="col-md-9">
-                        <div id="{$vid_id}" class="videoid text-center"><div class="yourscore">You scored {$your_score.0}{if $your_score|@count == 1} for this hazard{else} for the first hazard and {$your_score.1} for the second hazard{/if}</div><div class="embed-responsive embed-responsive-4by3">{$video}</div>{if $anti_cheat}<div id="anticheat">Anti-Cheat Activated</div>{/if}</div>
+                        <div id="{$vid_id}" class="videoid text-center"><div class="yourscore">You scored {$your_score.0}{if $your_score|@count == 1} for this hazard{else} for the first hazard and {$your_score.1} for the second hazard{/if}</div>
+                            <div class="embed-responsive embed-responsive-4by3"><div id="video_overlay">
+                                <div id="icon">
+                                    <img src="{$imagePath}hloading.gif" alt="Loading" width="100" height="100" />
+                                </div>
+                            </div>
+                            <video width="544" height="408" id="video" class="video embed-responsive-item" data-duration="{$video.endClip}" preload="auto" muted playsinline webkit-playsinline>
+                                <source src="{$video.videoLocation}mp4/{$video.videoName}.mp4" type="video/mp4" />
+                                <source src="{$video.videoLocation}ogv/{$video.videoName}.ogv" type="video/ogg" />
+                            </video>
+                            </div>
+                            {if $anti_cheat}<div id="anticheat">Anti-Cheat Activated</div>{/if}
+                        </div>
                         <div class="videocontrols col-md-12">
                             <div id="playvideo"><div class="reportbtn"></div><div class="controltext">Play</div></div><div id="pausevideo"><div class="reportbtn"></div><div class="controltext">Pause<br />5,4,3,2,1</div></div>
                             <div id="hazardscore">Score window<div id="scorenum">0</div></div>
