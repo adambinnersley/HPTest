@@ -42,8 +42,12 @@
             </div>
             <div class="col-md-12">
                 <div class="row">
-                    <div id="scorewindow">{$score_window}</div>
-                    {if $review_flags|is_array}<div id="reviewflags">{foreach $review_flags as $f => $flag}<img src="{$imagePath}hpflag.png" alt="Flag" width="20" height="20" id="flag{$f}" class="reviewflag" style="left:{$flag.margin-left}%" data-click="{$flag.click}" />{/foreach}</div>{/if}
+                    <div id="scorewindow">
+                        {foreach $score_window as $var => $window}
+                            <div id="{$window.name}" style="{if $window.left}margin-left:{$window.left}%;{/if}width:{$window.width}%"{if !$var|strstr:"pre"} data-score="{$window.score}"{if $window.scoreend} data-scoreend="{$window.scoreend}"{/if}{/if}></div>
+                        {/foreach}
+                    </div>
+                    {if $review_flags|is_array}<div id="reviewflags">{foreach $review_flags as $f => $flag}<img src="{$imagePath}hpflag.png" alt="Flag" width="20" height="20" id="flag{$f}" class="reviewflag" style="left:{$flag.left}%" data-click="{$flag.click}" />{/foreach}</div>{/if}
                     <div id="progress"></div>
                 </div>
             </div>
