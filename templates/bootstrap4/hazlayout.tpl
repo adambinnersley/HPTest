@@ -7,7 +7,7 @@
             <div id="{$next_question}" class="nextvideo mx-auto"><div class="showbtn"></div>Skip Clip</div>
             <div id="exittest"><div class="showbtn"></div>Exit Test</div>
         </div>
-        <div id="{$vid_id}" class="col-12 col-lg-10 offset-lg-1 text-center no-padding order-1">
+        <div id="{$vid_id}" class="videoid col-12 col-lg-10 offset-lg-1 text-center no-padding order-1">
             <div class="embed-responsive embed-responsive-4by3">
                 <div id="video_overlay">
                     <div id="icon">
