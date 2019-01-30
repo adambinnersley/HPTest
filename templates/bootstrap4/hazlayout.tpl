@@ -8,7 +8,7 @@
             <div id="exittest"><div class="showbtn"></div>Exit Test</div>
         </div>
         <div id="{$vid_id}" class="videoid col-12 col-lg-10 offset-lg-1 text-center no-padding order-1">
-            <div class="embed-responsive embed-responsive-4by3">
+            <div class="embed-responsive embed-responsive-{$ratio}">
                 <div id="video_overlay">
                     <div id="icon">
                         <img src="{$imagePath}hloading.gif" alt="Loading" width="100" height="100" />

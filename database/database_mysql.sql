@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `hazard_clips` (
   `six` decimal(6,3) DEFAULT NULL,
   `endseq2` decimal(6,3) DEFAULT NULL,
   `endClip` decimal(6,3) DEFAULT NULL,
+  `ratio` enum('16by9','4by3') NOT NULL DEFAULT '16by9',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

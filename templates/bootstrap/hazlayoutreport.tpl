@@ -17,7 +17,7 @@
                     <div class="col-md-3 text-center">{$videodesc|strip}</div> 
                     <div class="col-md-9">
                         <div id="{$vid_id}" class="videoid text-center"><div class="yourscore">You scored {$your_score.0}{if $your_score|@count == 1} for this hazard{else} for the first hazard and {$your_score.1} for the second hazard{/if}</div>
-                            <div class="embed-responsive embed-responsive-4by3"><div id="video_overlay">
+                            <div class="embed-responsive embed-responsive-{$ratio}"><div id="video_overlay">
                                 <div id="icon">
                                     <img src="{$imagePath}hloading.gif" alt="Loading" width="100" height="100" />
                                 </div>

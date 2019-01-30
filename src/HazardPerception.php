@@ -427,6 +427,7 @@ class HazardPerception implements HPInterface{
             $videoInfo = $this->getVideoInfo($prim);
             $this->template->assign('videotitle', $videoInfo['title']."<br />".$videoInfo['title2']);
             $this->template->assign('videodesc', nl2br($videoInfo['description']."\r\n\r\n".$videoInfo['description2']));
+            $this->template->assign('ratio', $videoInfo['ratio']);
             $this->template->assign('no_questions', $this->numVideos);
             $this->template->assign('your_score', $this->clipScore($prim));
             $this->template->assign('anti_cheat', $this->anyCheating($prim));
