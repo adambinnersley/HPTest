@@ -13,7 +13,7 @@
                 <div class="passmark col-md-6 text-right">You have scored {$score} points out of a possible 75</div>
                 </div>
             </div>
-            <table class="table table-bordered styled resultstable mb-0" id="{$testID}">
+            <table class="table table-bordered table-xs styled resultstable mb-0" id="{$testID}">
             <thead>
             <tr>
             <th class="text-center" style="width:50px">Test</th>

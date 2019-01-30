@@ -31,7 +31,7 @@
                             </div>
                             {if $anti_cheat}<div id="anticheat">Anti-Cheat Activated</div>{/if}
                         </div>
-                        <div class="videocontrols col-md-12">
+                        <div class="videocontrols col-md-12 mt-2">
                             <div id="playvideo"><div class="reportbtn"></div><div class="controltext">Play</div></div><div id="pausevideo"><div class="reportbtn"></div><div class="controltext">Pause<br />5,4,3,2,1</div></div>
                             <div id="hazardscore">Score window<div id="scorenum">0</div></div>
                             <span class="hidden-sm hidden-xs">

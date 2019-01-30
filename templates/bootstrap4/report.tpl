@@ -15,7 +15,7 @@
             <tr>
                 <td><a href="?test={$i}">{if $test.status >= 1}Retake {/if}{if ($i == 11 OR $i == 12)}DVSA {if $i == 12}CGI {/if}{/if}Hazard Perception Test {$i}</a></td>
                 <td class="text-center"><strong>{$test.totalscore|string_format:"%d"} / 75</strong></td>
-                {if $test.status >= 1}<td class="text-center {$result|strtolower}">{$result}</td>
+                {if $test.status >= 1}<td class="text-center bg-{if $result|strtolower == 'failed'}danger{else}success{/if}">{$result}</td>
                 {else}<td class="text-center">&nbsp;</td>{/if}
                 <td class="text-center">{if $test.status >= 1}<a href="?report=true&amp;id={$i}" title="Review Test">Review Test</a>{/if}</td>
             </tr>
