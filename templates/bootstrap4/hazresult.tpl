@@ -2,9 +2,7 @@
 {nocache}
 <div class="row">
     <div class="col-md-12">
-        <ul class="pager">
-            <li class="previous"><a href="hazard">&larr; Back to Hazard Tests</a></li>
-        </ul>
+        <a href="hazard" class="btn btn-secondary">&larr; Back to Hazard Tests</a>
         <div class="havepassed hp-{if $score < $passmark}failed{else}passed{/if}">You have {if $score < $passmark}failed{else}passed{/if} this time</div>
         <div class="card mb-3 border-primary">
             <div class="card-header bg-primary text-bold p-2">
@@ -13,7 +11,7 @@
                 <div class="passmark col-md-6 text-right">You have scored {$score} points out of a possible 75</div>
                 </div>
             </div>
-            <table class="table table-bordered table-xs styled resultstable mb-0" id="{$testID}">
+            <table class="table table-bordered table-sm styled resultstable mb-0" id="{$testID}">
             <thead>
             <tr>
             <th class="text-center" style="width:50px">Test</th>
@@ -44,9 +42,7 @@
         </div>
     </div>
     <div class="col-md-12">
-        <ul class="pager">
-            <li class="previous"><a href="hazard">&larr; Back to Hazard Tests</a></li>
-        </ul>
+        <a href="hazard" class="btn btn-secondary">&larr; Back to Hazard Tests</a>
     </div>
 </div>
 <script type="text/javascript">
