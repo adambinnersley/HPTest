@@ -232,7 +232,7 @@ tr[class*='colour']:hover td{
     position:relative;
     .embed-responsive{
         position:static !important;
-        .ember-responsive-item{
+        .ember-responsive-item, video{
             position:static !important;
         }
     }
