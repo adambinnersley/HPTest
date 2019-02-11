@@ -637,11 +637,12 @@ class HazardPerception implements HPInterface{
      * @return array 
      */
     protected function videoScore($i, $hazards) {
-        $videos = array();
+        $videos = [];
         $first_score = intval($this->getSessionInfo()[$i]['score']);
         if($hazards == 1) {
             $videos['text_score'] = ($first_score < 0 ? 0 : $first_score);
             $videos['score'] = $videos['text_score'];
+            unset($videos['second_score']);
         }
         else{
             if($first_score < 0) {
