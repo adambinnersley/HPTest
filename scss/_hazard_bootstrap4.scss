@@ -231,7 +231,9 @@ tr[class*='colour']:hover td{
 .videoid{
     position:relative;
     .embed-responsive-16by9{
-        padding-top:0 !important;
+        &:before{
+            padding-top:0 !important;
+        }
     }
     .embed-responsive{
         position:static !important;
