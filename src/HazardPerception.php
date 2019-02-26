@@ -388,13 +388,13 @@ class HazardPerception implements HPInterface{
             foreach($clicks as $click) {
                 if($score === false && $click >= $this->videoInfo['five'] && $click <= $this->videoInfo['endseq']) {
                     $score = $this->markHazard($click);
-                    $this->getSessionInfo()['totalscore'] = intval($this->getSessionInfo()['totalscore']) + $score;
-                    $this->getSessionInfo()[$questionNo]['score'] = intval($score);
+                    $_SESSION['hptest'.$this->getTestID()]['totalscore'] = intval($this->getSessionInfo()['totalscore']) + $score;
+                    $_SESSION['hptest'.$this->getTestID()][$questionNo]['score'] = intval($score);
                 }
                 if($secscore === false && $this->videoInfo['nohazards'] == 2 && $click >= $this->videoInfo['ten'] && $click <= $this->videoInfo['endseq2']) {
                     $secscore = $this->markHazard($click, 2);
-                    $this->getSessionInfo()['totalscore'] = intval($this->getSessionInfo()['totalscore']) + $secscore;
-                    $this->getSessionInfo()['second_score'] = intval($secscore);
+                    $_SESSION['hptest'.$this->getTestID()]['totalscore'] = intval($this->getSessionInfo()['totalscore']) + $secscore;
+                    $_SESSION['hptest'.$this->getTestID()]['second_score'] = intval($secscore);
                 }
             }
         }
