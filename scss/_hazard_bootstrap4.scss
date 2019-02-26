@@ -230,7 +230,7 @@ tr[class*='colour']:hover td{
 }
 .videoid{
     position:relative;
-    .embed-responsive-16by9{
+    .embed-responsive-16by9, .embed-responsive-4by3{
         &:before{
             padding-top:0 !important;
         }

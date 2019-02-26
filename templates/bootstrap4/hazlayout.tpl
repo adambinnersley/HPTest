@@ -2,12 +2,12 @@
 {nocache}
 <div id="question-content" data-test="{$testID}">
     <div class="row">
-        <div id="buttons" class="col-12 col-lg-1 col-md-10 order-2 text-center">
+        <div id="buttons" class="col-12 col-lg-1 col-md-10 order-md-2 text-center">
             {$review}
             <div id="{$next_question}" class="nextvideo mx-auto"><div class="showbtn"></div>Skip Clip</div>
             <div id="exittest"><div class="showbtn"></div>Exit Test</div>
         </div>
-        <div id="{$vid_id}" class="videoid col-12 col-lg-10 offset-lg-1 text-center no-padding order-1">
+        <div id="{$vid_id}" class="videoid col-12 col-lg-10 offset-lg-1 text-center no-padding order-md-1">
             <div class="embed-responsive embed-responsive-{$ratio}">
                 <div id="video_overlay">
                     <div id="icon">
