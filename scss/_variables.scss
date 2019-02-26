@@ -1,12 +1,12 @@
-$hp-font-family: "FontAwesome" !default;
+$hp-font-family: "Font Awesome 5 Free" !default;
 $hp-font-weight: 900 !default;
 
 $hp-image-location: "/images/theory/" !default;
 
 $hp-icon-exit : fa-content($fa-var-power-off) !default;
 $hp-icon-skip : fa-content($fa-var-level-up) !default;
-$hp-icon-prev : fa-content($fa-var-chevron-left) !default;
-$hp-icon-next : fa-content($fa-var-chevron-right) !default;
+$hp-icon-prev : fa-content($fa-var-angle-left) !default;
+$hp-icon-next : fa-content($fa-var-angle-right) !default;
 $hp-icon-close : fa-content($fa-var-times) !default;
 $hp-icon-play : fa-content($fa-var-play) !default;
 $hp-icon-pause : fa-content($fa-var-pause) !default;
