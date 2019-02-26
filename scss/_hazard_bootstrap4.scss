@@ -264,13 +264,12 @@ tr[class*='colour']:hover td{
         padding:0;
         cursor:pointer;
         vertical-align:top;
-        font-weight: $hp-font-weight !important;
         color:#FFF;
         font-family:$hp-font-family;
         background:#336699;
         text-align:center;
         &:before{
-            font-weight:normal;
+            font-weight: $hp-font-weight !important;
         }
         &:hover{
             color:darken(#FFF, 20%);
