@@ -9,6 +9,9 @@
         position:absolute;
         top:8px;
         left:15px;
+        @include media-breakpoint-down(lg){
+            left:5px;
+        }
         width:40px;
     }
     #buttons{
@@ -51,7 +54,7 @@
     line-height: 1.2em;
     font-weight:700;
     display:block;
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(lg){
         display:inline-block;
         float:right;
         padding:0;
