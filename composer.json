@@ -1,6 +1,6 @@
 {
     "name": "adamb/hptest",
-    "type": "project",
+    "type": "library",
     "require": {
         "adamb/database": "^1.0",
         "adamb/user": "^1.0",
