@@ -32,7 +32,7 @@ class HPReview {
         $this->config = $config;
         $this->user = $user;
         $this->template = $template;
-        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates'.DS.$theme : $templateDir), 'hazard');
+        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates'.DIRECTORY_SEPARATOR.$theme : $templateDir), 'hazard');
         if(is_numeric($userID)){$this->userClone = $userID;}
     }
     
@@ -71,7 +71,7 @@ class HPReview {
      * @return int Returns The number of Hazard Perception tests the user has passed
      */
     public function testsPassed(){
-        return $this->db->count($this->config->table_hazard_progress, array('status' => 1, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)));
+        return $this->db->count($this->config->table_hazard_progress, ['status' => 1, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)]);
     }
     
     /**
@@ -79,7 +79,7 @@ class HPReview {
      * @return int Returns The number of Hazard Perception tests the user has failed
      */
     public function testsFailed(){
-        return $this->db->count($this->config->table_hazard_progress, array('status' => 2, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)));
+        return $this->db->count($this->config->table_hazard_progress, ['status' => 2, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)]);
     }
     
     /**
@@ -87,10 +87,10 @@ class HPReview {
      * @return type Returns the answers for each of the hazard perception tests ready to review
      */
     public function reviewHPTests(){
-        $answers = array();
+        $answers = [];
         for($i = 1; $i <= $this->numberOfHPTests(); $i++){
             unset($_SESSION['hptest'.$i]);
-            $info = $this->db->select($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $i, 'test_type' => strtoupper($this->testType)), array('status', 'progress'));
+            $info = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $i, 'test_type' => strtoupper($this->testType)], ['status', 'progress']);
             $answers[$i]['status'] = $info['status'];
             $userprogress = unserialize(stripslashes($info['progress']));
             $answers[$i]['totalscore'] = $userprogress['totalscore'];

@@ -41,7 +41,7 @@ class FreeHazardPerception extends HazardPerception{
      * @param int $testNo This should be the Test ID
      */
     protected function chooseVideos($testNo){
-        $videos = $this->db->selectAll($this->config->table_hazard_videos, array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
+        $videos = $this->db->selectAll($this->config->table_hazard_videos, ['hptestno' => $testNo], '*', ['hptestposition' => 'ASC']);
         if($this->report === false){
             unset($_SESSION['hptest'.$testNo]);
         }

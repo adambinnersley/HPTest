@@ -14,7 +14,7 @@ class HazardPerceptionTest extends TestCase{
     protected static $user;
     protected static $hp;
     
-    public function setUp() {
+    public function setUp() : void {
         self::$db = new Database('localhost', $GLOBALS['DB_USER'], $GLOBALS['DB_PASSWD'], $GLOBALS['DB_DBNAME']);
         if(!self::$db->isConnected()){
              $this->markTestSkipped(
@@ -28,7 +28,7 @@ class HazardPerceptionTest extends TestCase{
         self::$hp = new HazardPerception(self::$db, self::$config, new Smarty(), self::$user);
     }
     
-    public function tearDown() {
+    public function tearDown() : void {
         unset(self::$db);
         unset(self::$config);
         unset(self::$hp);

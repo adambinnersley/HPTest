@@ -36,10 +36,10 @@ class HazardPerception implements HPInterface{
     protected $userType = 'account';
     protected $testType = 'CAR';
     
-    protected $windows = array(
-        1 => array('five', 'four', 'three', 'two', 'one', 'endseq', 'prehazard'),
-        2 => array('ten', 'nine', 'eight', 'seven', 'six', 'endseq2', 'prehazard2')
-    );
+    protected $windows = [
+        1 => ['five', 'four', 'three', 'two', 'one', 'endseq', 'prehazard'],
+        2 => ['ten', 'nine', 'eight', 'seven', 'six', 'endseq2', 'prehazard2']
+    ];
 
     /**
      * Sets the required variables for the test to be rendered
@@ -56,7 +56,7 @@ class HazardPerception implements HPInterface{
         $this->config = $config;
         $this->user = $user;
         $this->template = $template;
-        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates'.DS.$theme : $templateDir), 'hazard');
+        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates'.DIRECTORY_SEPARATOR.$theme : $templateDir), 'hazard');
         if(!session_id()){
             if(defined(SESSION_NAME)){session_name(SESSION_NAME);}
             session_set_cookie_params(0, '/', '.'.DOMAIN, (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false),  (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false));
@@ -108,7 +108,7 @@ class HazardPerception implements HPInterface{
             return $this->getSessionInfo();
         }
         else{
-            $userProgress = $this->db->select($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()));
+            $userProgress = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()]);
             $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
             return $_SESSION['hptest'.$this->getTestID()];
         }
@@ -128,10 +128,10 @@ class HazardPerception implements HPInterface{
      * @return void nothing is returned
      */
     protected function chooseVideos($testNo) {
-        $videos = $this->db->selectAll($this->config->table_hazard_videos, array('hptestno' => $testNo), '*', array('hptestposition' => 'ASC'));
+        $videos = $this->db->selectAll($this->config->table_hazard_videos, ['hptestno' => $testNo], '*', ['hptestposition' => 'ASC']);
         if($this->report === false) {
             unset($_SESSION['hptest'.$testNo]);
-            $this->db->delete($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()));
+            $this->db->delete($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()]);
         }
         $v = 1;
         foreach($videos as $video) {
@@ -313,7 +313,7 @@ class HazardPerception implements HPInterface{
      * @return array The video information will be returned as an array
      */
     protected function getVideoInfo($videoID) {
-        $this->videoInfo = $this->db->select($this->config->table_hazard_videos, array('id' => $videoID));
+        $this->videoInfo = $this->db->select($this->config->table_hazard_videos, ['id' => $videoID]);
         return $this->videoInfo;
     }
     
@@ -444,7 +444,7 @@ class HazardPerception implements HPInterface{
             $this->template->assign('imagePath', $this->getImageLocation());
             
             $this->videodata = ($this->report === false ? $this->template->fetch('hazlayout.tpl') : $this->template->fetch('hazlayoutreport.tpl'));
-            return json_encode(array('html' => $this->videodata, 'questionnum' => $this->currentVideoNo($prim)));
+            return json_encode(['html' => $this->videodata, 'questionnum' => $this->currentVideoNo($prim)]);
         }
         return false;
     }
@@ -463,7 +463,7 @@ class HazardPerception implements HPInterface{
      * @return boolean Returns true if test already exist
      */
     protected function anyCompleteTests() {
-        return $this->db->select($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()));
+        return $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()]);
     }
     
     /**
@@ -605,8 +605,8 @@ class HazardPerception implements HPInterface{
             $this->userprogress = false;
         }
         $score = 0;
-        $windows = array();
-        $videos = array();
+        $windows = [];
+        $videos = [];
         for($i = 1; $i <= $this->numVideos; $i++) {
             $videoID = $this->getSessionInfo()['videos'][$i];
             $info = $this->getVideoInfo($videoID);
@@ -678,7 +678,7 @@ class HazardPerception implements HPInterface{
      * Inserts the users results into the database
      */
     protected function addResultsToDB() {
-        $this->db->delete($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType())); // Delete old tests
-        $this->db->insert($this->config->table_hazard_progress, array('user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status));
+        $this->db->delete($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType()]); // Delete old tests
+        $this->db->insert($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status]);
     }
 }

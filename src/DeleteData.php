@@ -31,7 +31,7 @@ class DeleteData {
     public function deleteData($userID = false) {
         if($userID === false){$userID = $this->user->getUserID();}
         if(is_numeric($userID)){
-            $this->db->delete($this->config->table_hazard_progress, array('user_id' => $userID));
+            $this->db->delete($this->config->table_hazard_progress, ['user_id' => $userID]);
             return true;
         }
         return false;
