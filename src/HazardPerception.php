@@ -522,8 +522,11 @@ class HazardPerception implements HPInterface{
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
         $vidInfo = $this->getVideoInfo($prim);
-        if($this->getSessionInfo()[$clipNo]['score'] < 0) {$score[] = 0;}
-        else{$score[] = intval($this->getSessionInfo()[$clipNo]['score']);}
+        if(isset($this->getSessionInfo()[$clipNo]['score'])) {
+            if($this->getSessionInfo()[$clipNo]['score'] < 0) {$score[] = 0;}
+            else{$score[] = intval($this->getSessionInfo()[$clipNo]['score']);}
+        }
+        else{$score[] = 0;}
         if($vidInfo['nohazards'] != 1) {$score[] = intval(isset($this->getSessionInfo()['second_score']) ? $this->getSessionInfo()['second_score'] : 0);}
         return $score;
     }
@@ -536,7 +539,9 @@ class HazardPerception implements HPInterface{
     protected function anyCheating($prim) {
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
-        if($this->getSessionInfo()[$clipNo]['score'] == -1) {return true;}
+        if(isset($this->getSessionInfo()[$clipNo]['score'])) {
+            if($this->getSessionInfo()[$clipNo]['score'] == -1) {return true;}
+        }
         return false;
     }
     
