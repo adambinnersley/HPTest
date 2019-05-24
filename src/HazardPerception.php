@@ -499,7 +499,7 @@ class HazardPerception implements HPInterface{
      * @return array|false This should be the flag information for margin-left and click
      */
     protected function getReviewFlags($videoID) {
-        $clicks = unserialize($this->getSessionInfo()[$this->currentVideoNo($videoID)]['clicks']);
+        $clicks = (isset($this->getSessionInfo()[$this->currentVideoNo($videoID)]['clicks']) ? unserialize($this->getSessionInfo()[$this->currentVideoNo($videoID)]['clicks']) : false);
         if(is_array($clicks)) {
             $flags = [];
             foreach($clicks as $i => $click) {
