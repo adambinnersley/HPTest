@@ -94,7 +94,7 @@ class HPReview {
             if(is_array($info)) {
                 $answers[$i]['status'] = $info['status'];
                 $userprogress = unserialize(stripslashes($info['progress']));
-                $answers[$i]['totalscore'] = $userprogress['totalscore'];
+                $answers[$i]['totalscore'] = (isset($userprogress['totalscore']) ? $userprogress['totalscore'] : 0);
             }
             else{
                 $answers[$i] = ['status' => 0, 'totalscore' => 0];
