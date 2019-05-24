@@ -116,10 +116,10 @@ class HazardPerception implements HPInterface{
     
     /**
      * Retrieves the test information from the current session
-     * @return array
+     * @return array|false
      */
     public function getSessionInfo() {
-        return $_SESSION['hptest'.$this->getTestID()];
+        return isset($_SESSION['hptest'.$this->getTestID()]) ? $_SESSION['hptest'.$this->getTestID()] : false;
     }
     
     /**
