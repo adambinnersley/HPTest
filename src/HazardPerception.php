@@ -524,7 +524,7 @@ class HazardPerception implements HPInterface{
         $vidInfo = $this->getVideoInfo($prim);
         if($this->getSessionInfo()[$clipNo]['score'] < 0) {$score[] = 0;}
         else{$score[] = intval($this->getSessionInfo()[$clipNo]['score']);}
-        if($vidInfo['nohazards'] != 1) {$score[] = intval($this->getSessionInfo()['second_score']);}
+        if($vidInfo['nohazards'] != 1) {$score[] = intval(isset($this->getSessionInfo()['second_score']) ? $this->getSessionInfo()['second_score'] : 0);}
         return $score;
     }
     
