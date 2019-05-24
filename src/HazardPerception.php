@@ -605,7 +605,7 @@ class HazardPerception implements HPInterface{
             $this->userprogress = false;
         }
         $score = 0;
-        $windows = [];
+        $windows = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
         $videos = [];
         for($i = 1; $i <= $this->numVideos; $i++) {
             $videoID = $this->getSessionInfo()['videos'][$i];
@@ -616,8 +616,8 @@ class HazardPerception implements HPInterface{
             $videos[$i]['description'] = $info['title'];
             $videos[$i]['score'] = $scoreInfo['text_score'];
             $windows[$scoreInfo['score']]++;
-            if($scoreInfo['second_score']) {$windows[$scoreInfo['second_score']]++;}
-            $score = $score + intval($scoreInfo['score']) + intval($scoreInfo['second_score']);
+            if(isset($scoreInfo['second_score'])) {$windows[$scoreInfo['second_score']]++;}
+            $score = $score + intval($scoreInfo['score']) + intval(isset($scoreInfo['second_score']) ? $scoreInfo['second_score'] : 0);
         }
         if($mark === true) {
             if($score >= $this->getPassmark()) {$this->status = 1;}else{$this->status = 2;}
@@ -640,7 +640,7 @@ class HazardPerception implements HPInterface{
      */
     protected function videoScore($i, $hazards) {
         $videos = [];
-        $first_score = intval($this->getSessionInfo()[$i]['score']);
+        $first_score = intval(isset($this->getSessionInfo()[$i]['score']) ? $this->getSessionInfo()[$i]['score'] : 0);
         if($hazards == 1) {
             $videos['text_score'] = ($first_score < 0 ? 0 : $first_score);
             $videos['score'] = $videos['text_score'];
@@ -653,7 +653,7 @@ class HazardPerception implements HPInterface{
             }
             else{
                 $score1 = $first_score;
-                $score2 = intval($this->getSessionInfo()['second_score']);
+                $score2 = intval(isset($this->getSessionInfo()['second_score']) ? $this->getSessionInfo()['second_score'] : 0);
             }
             $videos['text_score'] = $score1.' + '.$score2;
             $videos['score'] = $score1;
