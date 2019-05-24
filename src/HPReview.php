@@ -91,9 +91,14 @@ class HPReview {
         for($i = 1; $i <= $this->numberOfHPTests(); $i++){
             unset($_SESSION['hptest'.$i]);
             $info = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $i, 'test_type' => strtoupper($this->testType)], ['status', 'progress']);
-            $answers[$i]['status'] = $info['status'];
-            $userprogress = unserialize(stripslashes($info['progress']));
-            $answers[$i]['totalscore'] = $userprogress['totalscore'];
+            if(is_array($info)) {
+                $answers[$i]['status'] = $info['status'];
+                $userprogress = unserialize(stripslashes($info['progress']));
+                $answers[$i]['totalscore'] = $userprogress['totalscore'];
+            }
+            else{
+                $answers[$i] = ['status' => 0, 'totalscore' => 0];
+            }
         }
         return $answers;
     }
