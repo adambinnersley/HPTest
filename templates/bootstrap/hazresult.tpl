@@ -29,7 +29,7 @@
                 <td>{$video.no}</td>
                 <td>{$video.description}</td>
                 <td>{$video.score}</td>
-                <td>{$video.status}</td>
+                <td>{if isset($video.status)}{$video.status}{/if}</td>
             </tr>    
             {/foreach}
             </table>
