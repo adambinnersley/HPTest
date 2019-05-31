@@ -21,6 +21,7 @@ class HazardPerception implements HPInterface{
     
     protected $userAnswers;
     protected $status;
+    protected $currentVideo;
     
     public $javascriptLocation = '/js/theory/';
     public $videoLocation = '/videos/';
@@ -301,8 +302,14 @@ class HazardPerception implements HPInterface{
      * @return int|boolean Returns the current video id if progress exists else returns false
      */
     protected function currentVideoNo($videoID) {
+        if(is_numeric($this->currentVideo)){
+            return $this->currentVideo;
+        }
         foreach($this->getSessionInfo()['videos'] as $number => $value) {
-            if($value == $videoID) {return intval($number);}
+            if($value == $videoID) {
+                $this->currentVideo = intval($number);
+                return $this->currentVideo;
+            }
         }
         return false;
     }
