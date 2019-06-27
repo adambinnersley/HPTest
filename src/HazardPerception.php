@@ -93,10 +93,8 @@ class HazardPerception implements HPInterface{
             else{$this->getUserProgress($testNo);}
             return $this->buildTest($prim);
         }
-        else{
-            $this->template->assign('status', $this->testStatus(), true);
-            return $this->template->fetch('test-complete.tpl');
-        }
+        $this->template->assign('status', $this->testStatus(), true);
+        return $this->template->fetch('test-complete.tpl');
     }
     
     /**
@@ -108,11 +106,9 @@ class HazardPerception implements HPInterface{
         if($this->getSessionInfo()) {
             return $this->getSessionInfo();
         }
-        else{
-            $userProgress = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()]);
-            $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
-            return $_SESSION['hptest'.$this->getTestID()];
-        }
+        $userProgress = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()]);
+        $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
+        return $_SESSION['hptest'.$this->getTestID()];
     }
     
     /**
@@ -360,7 +356,7 @@ class HazardPerception implements HPInterface{
      */
     protected function getScript() {
         if($this->report === false) {return $this->getJavascriptLocation().'hazard-perception-'.$this->scriptVar.'.js';}
-        else{return $this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js';}
+        return $this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js';
     }
     
     /**
@@ -586,7 +582,8 @@ class HazardPerception implements HPInterface{
         $this->template->assign('question_no', $this->currentVideoNo($prim));
         $this->template->assign('no_questions', $this->numVideos);
         $this->template->assign('video_data', $this->videodata);
-        if($this->report === false) {return $this->template->fetch('hazardtest.tpl');}else{return $this->template->fetch('hazardtestreport.tpl');}
+        if($this->report === false) {return $this->template->fetch('hazardtest.tpl');}
+        return $this->template->fetch('hazardtestreport.tpl');
     }
     
     /**
@@ -609,7 +606,7 @@ class HazardPerception implements HPInterface{
     public function testStatus() {
         $testInfo = $this->anyCompleteTests();
         if($testInfo['status'] == 1) {return 'passed';}
-        else{return 'failed';}
+        return 'failed';
     }
     
     /**
