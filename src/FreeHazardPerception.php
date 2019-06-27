@@ -45,12 +45,7 @@ class FreeHazardPerception extends HazardPerception{
         if($this->report === false){
             unset($_SESSION['hptest'.$testNo]);
         }
-        $v = 1;
-        foreach($videos as $video){
-            $this->userAnswers[$v]['id'] = $video['id'];
-            $_SESSION['hptest'.$testNo]['videos'][$v] = $video['id'];
-            $v++;
-        }
+        $this->setVideos($videos, $testNo);
     }
     
     /**

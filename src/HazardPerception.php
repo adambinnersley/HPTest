@@ -46,7 +46,7 @@ class HazardPerception implements HPInterface{
      * Sets the required variables for the test to be rendered
      * @param Database $db This should be an instance of Database
      * @param Config $config This should be the instance of Config
-     * @param Smarty $template This should be the instance of Smarty Templating
+     * @param Smarty $template This should be the instance of Smarty Template
      * @param object $user This should be an instance of User class
      * @param int|false If you want to emulate a user set this here
      * @param string|false If you want to change the template location set this location here else set to false
@@ -57,7 +57,7 @@ class HazardPerception implements HPInterface{
         $this->config = $config;
         $this->user = $user;
         $this->template = $template;
-        $this->template->addTemplateDir(($templateDir === false ? str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates'.DIRECTORY_SEPARATOR.$theme : $templateDir), 'hazard');
+        $this->template->addTemplateDir((is_string($templateDir) ? $templateDir : str_replace(basename(__DIR__), '', dirname(__FILE__)).'templates'.DIRECTORY_SEPARATOR.$theme), 'hazard');
         if(!session_id()){
             if(defined(SESSION_NAME)){session_name(SESSION_NAME);}
             session_set_cookie_params(0, '/', '.'.(defined('DOMAIN') ? DOMAIN : str_replace(['http://', 'https://', 'www.'], '', $_SERVER['SERVER_NAME'])), (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false),  (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false));
@@ -134,6 +134,15 @@ class HazardPerception implements HPInterface{
             unset($_SESSION['hptest'.$testNo]);
             $this->db->delete($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()]);
         }
+        $this->setVideos($videos, $testNo);
+    }
+    
+    /**
+     * Sets the videos in the current session
+     * @param array $videos This should be an array of the video information
+     * @param int This should be the current test number
+     */
+    protected function setVideos($videos, $testNo) {
         $v = 1;
         foreach($videos as $video) {
             $this->userAnswers[$v]['id'] = $video['id'];
@@ -529,6 +538,7 @@ class HazardPerception implements HPInterface{
         $clipNo = $this->currentVideoNo($prim);
         $this->getUserProgress($this->getTestID());
         $vidInfo = $this->getVideoInfo($prim);
+        $score = [];
         if(isset($this->getSessionInfo()[$clipNo]['score'])) {
             if($this->getSessionInfo()[$clipNo]['score'] < 0) {$score[] = 0;}
             else{$score[] = intval($this->getSessionInfo()[$clipNo]['score']);}
