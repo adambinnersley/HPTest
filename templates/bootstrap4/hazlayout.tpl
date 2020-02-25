@@ -3,7 +3,7 @@
 <div id="question-content" data-test="{$testID}">
     <div class="row">
         <div id="buttons" class="col-12 col-lg-1 col-md-10 order-lg-2 text-center">
-            {$review}
+            {if isset($review)}{$review}{/if}
             <div id="{$next_question}" class="nextvideo mx-auto"><div class="showbtn"></div>Skip Clip</div>
             <div id="exittest"><div class="showbtn"></div>Exit Test</div>
         </div>
