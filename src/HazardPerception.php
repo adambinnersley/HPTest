@@ -307,7 +307,7 @@ class HazardPerception implements HPInterface{
      * @return int|boolean Returns the current video id if progress exists else returns false
      */
     protected function currentVideoNo($videoID) {
-        if(is_numeric($this->currentVideo[$videoID])){
+        if(isset($this->currentVideo[$videoID]) && is_numeric($this->currentVideo[$videoID])){
             return $this->currentVideo[$videoID];
         }
         foreach($this->getSessionInfo()['videos'] as $number => $value) {
@@ -316,7 +316,7 @@ class HazardPerception implements HPInterface{
                 return $this->currentVideo[$videoID];
             }
         }
-        return false;
+        return 1;
     }
     
     /**

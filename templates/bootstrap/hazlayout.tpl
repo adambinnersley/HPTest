@@ -2,7 +2,7 @@
 {nocache}
 <div id="question-content" data-test="{$testID}">
     <div class="row">
-        <div id="buttons" class="col-lg-1 col-md-10 col-xs-8 pull-right text-center">{$review} <div id="{$next_question}" class="nextvideo"><div class="showbtn"></div>Skip Clip</div> <div id="exittest"><div class="showbtn"></div>Exit Test</div></div>
+        <div id="buttons" class="col-lg-1 col-md-10 col-xs-8 pull-right text-center">{if isset($review)}{$review}{/if} <div id="{$next_question}" class="nextvideo"><div class="showbtn"></div>Skip Clip</div> <div id="exittest"><div class="showbtn"></div>Exit Test</div></div>
         <div id="{$vid_id}" class="col-xs-12 col-lg-10 col-lg-offset-1 videoid text-center no-padding">
             <div class="embed-responsive embed-responsive-{$ratio}">
                 <div id="video_overlay">
