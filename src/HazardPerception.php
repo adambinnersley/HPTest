@@ -623,8 +623,8 @@ class HazardPerception implements HPInterface{
             }
             $this->userprogress = false;
         }
-        $score = 0;
         $windows = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+        $score = [];
         $videos = [];
         for($i = 1; $i <= $this->numVideos; $i++) {
             $videoID = $this->getSessionInfo()['videos'][$i];
@@ -635,16 +635,20 @@ class HazardPerception implements HPInterface{
             $videos[$i]['description'] = $info['title'];
             $videos[$i]['score'] = $scoreInfo['text_score'];
             $windows[$scoreInfo['score']]++;
-            if(isset($scoreInfo['second_score'])) {$windows[$scoreInfo['second_score']]++;}
-            $score = $score + intval($scoreInfo['score']) + intval(isset($scoreInfo['second_score']) ? $scoreInfo['second_score'] : 0);
+            if(isset($scoreInfo['second_score'])) {
+                $windows[$scoreInfo['second_score']]++;
+                $score[] = intval($scoreInfo['second_score']);
+            }
+            $score[] = intval($scoreInfo['score']);
         }
+        $totalScore = array_sum($score);
         if($mark === true) {
-            if($score >= $this->getPassmark()) {$this->status = 1;}else{$this->status = 2;}
-            $this->getSessionInfo()['totalscore'] = $score;
+            if($totalScore >= $this->getPassmark()) {$this->status = 1;}else{$this->status = 2;}
+            $this->getSessionInfo()['totalscore'] = $totalScore;
             $this->addResultsToDB();
         }
         $this->template->assign('windows', $windows);
-        $this->template->assign('score', $score);
+        $this->template->assign('score', $totalScore);
         $this->template->assign('passmark', $this->getPassmark());
         $this->template->assign('videos', $videos);
         $this->template->assign('testID', $this->getTestID());
