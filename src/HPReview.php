@@ -15,7 +15,7 @@ class HPReview {
     
     public $numberOfHPTests = 12;
     
-    protected $testType = 'CAR';
+    public $testType = 'CAR';
     
     /**
      * Connects to the database sets the current user and gets any user answers
