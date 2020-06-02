@@ -11,6 +11,7 @@
                     </div>
                 </div>
                 <video width="544" height="408" id="video" class="video embed-responsive-item" data-duration="{$video.endClip}" preload="auto" controlsList="nodownload nofullscreen noremoteplayback" muted playsinline webkit-playsinline disablePictureInPicture>
+                    <source src="{$video.videoLocation}dash/{$video.videoName}.mpd" type="application/dash+xml" />
                     <source src="{$video.videoLocation}mp4/{$video.videoName}.mp4" type="video/mp4" />
                     <source src="{$video.videoLocation}ogv/{$video.videoName}.ogv" type="video/ogg" />
                 </video>
@@ -19,6 +20,7 @@
     </div>
 </div>
 <div class="row flagholder"><div id="flags"></div></div>
-<script type="text/javascript" src="{$script}"></script>
+<script src="http://cdn.dashjs.org/latest/dash.all.min.js"></script>
+<script src="{$script}"></script>
 {/nocache}
 {/strip}

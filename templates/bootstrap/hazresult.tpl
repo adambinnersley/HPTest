@@ -49,7 +49,7 @@
         </ul>
     </div>
 </div>
-<script type="text/javascript">
+<script>
 $('.reviewhp td').click(function(){
     window.location = '?review=' + $('.resultstable').attr('id') + '&prim=' + $(this).parent("tr").attr('id');
 });

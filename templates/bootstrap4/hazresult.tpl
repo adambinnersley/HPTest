@@ -45,7 +45,7 @@
         <a href="hazard" class="btn btn-secondary">&larr; Back to Hazard Tests</a>
     </div>
 </div>
-<script type="text/javascript">
+<script>
 $('.reviewhp td').click(function(){
     window.location = '?review=' + $('.resultstable').attr('id') + '&prim=' + $(this).parent("tr").attr('id');
 });
