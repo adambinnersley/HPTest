@@ -2,7 +2,7 @@
 {nocache}
 <div class="row">
     <div class="col-md-12">
-        <a href="hazard" class="btn btn-secondary">&larr; Back to Hazard Tests</a>
+        <a href="{if isset($hazTestsLocation)}{$hazTestsLocation}{else}hazard{/if}" class="btn btn-secondary">&larr; Back to Hazard Tests</a>
         <div class="havepassed hp-{if $score < $passmark}failed{else}passed{/if}">You have {if $score < $passmark}failed{else}passed{/if} this time</div>
         <div class="card mb-3 border-primary">
             <div class="card-header bg-primary text-bold p-2">
@@ -42,7 +42,7 @@
         </div>
     </div>
     <div class="col-md-12">
-        <a href="hazard" class="btn btn-secondary">&larr; Back to Hazard Tests</a>
+        <a href="{if isset($hazTestsLocation)}{$hazTestsLocation}{else}hazard{/if}" class="btn btn-secondary">&larr; Back to Hazard Tests</a>
     </div>
 </div>
 <script>

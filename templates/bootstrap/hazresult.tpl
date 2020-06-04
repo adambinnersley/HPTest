@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-md-12">
         <ul class="pager">
-            <li class="previous"><a href="hazard">&larr; Back to Hazard Tests</a></li>
+            <li class="previous"><a href="{if isset($hazTestsLocation)}{$hazTestsLocation}{else}hazard{/if}">&larr; Back to Hazard Tests</a></li>
         </ul>
         <div class="havepassed hp-{if $score < $passmark}failed{else}passed{/if}">You have {if $score < $passmark}failed{else}passed{/if} this time</div>
         <div class="panel panel-default">
@@ -45,7 +45,7 @@
     </div>
     <div class="col-md-12">
         <ul class="pager">
-            <li class="previous"><a href="hazard">&larr; Back to Hazard Tests</a></li>
+            <li class="previous"><a href="{if isset($hazTestsLocation)}{$hazTestsLocation}{else}hazard{/if}">&larr; Back to Hazard Tests</a></li>
         </ul>
     </div>
 </div>
