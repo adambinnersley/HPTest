@@ -617,7 +617,7 @@ class HazardPerception implements HPInterface{
     public function endTest($mark) {
         $this->getUserProgress($this->getTestID());
         if($mark === true) {
-            unset($this->getSessionInfo()['totalscore']);
+            unset($_SESSION['hptest'.$this->getTestID()]['totalscore']);
             for($i = 1; $i <= $this->numVideos; $i++) {
                 $this->markVideo($this->getSessionInfo()['videos'][$i]);
             }
@@ -637,9 +637,9 @@ class HazardPerception implements HPInterface{
             $windows[$scoreInfo['score']]++;
             if(isset($scoreInfo['second_score'])) {
                 $windows[$scoreInfo['second_score']]++;
-                $score[] = intval($scoreInfo['second_score']);
+                $score[($this->numVideos + 1)] = intval($scoreInfo['second_score']);
             }
-            $score[] = intval($scoreInfo['score']);
+            $score[$i] = intval($scoreInfo['score']);
         }
         $totalScore = array_sum($score);
         if($mark === true) {
