@@ -54,7 +54,7 @@
     line-height: 1.2em;
     font-weight:700;
     display:block;
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(md){
         display:inline-block;
         float:right;
         padding:0;

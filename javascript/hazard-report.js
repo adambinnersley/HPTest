@@ -13,10 +13,6 @@ myVideo.oncanplaythrough = function(){
     }
 };
 
-if(navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-    videoLoaded();
-}
-
 $("#video").bind("ended", function(){
     myVideo.currentTime = 0;
     pauseAlerts = [];
