@@ -55,9 +55,11 @@ CREATE TABLE IF NOT EXISTS `users_hazard_progress` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) UNSIGNED NOT NULL,
   `test_id` int(11) NOT NULL,
+  `current_test` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
   `progress` text,
   `test_type` varchar(6) NOT NULL DEFAULT 'CAR',
   `status` smallint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_test` (`user_id`,`test_id`,`test_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Make sure only 1 of each test is only stored for each user';
+  UNIQUE KEY `unique_test` (`user_id`,`test_id`,`test_type`),
+  KEY `current` (`current_test`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
