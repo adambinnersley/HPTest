@@ -2,7 +2,8 @@
 
 namespace HPTest;
 
-class ADIHazardPerception extends HazardPerception{
+class ADIHazardPerception extends HazardPerception
+{
     public $passmark = 57;
     
     protected $userType = 'adi';

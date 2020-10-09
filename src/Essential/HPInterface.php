@@ -2,7 +2,8 @@
 
 namespace HPTest\Essential;
 
-interface HPInterface{
+interface HPInterface
+{
     public function createTest();
     public function createHTML($prim);
     public function getUserProgress($testID);
