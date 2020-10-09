@@ -523,7 +523,7 @@ class HazardPerception implements HPInterface
     
     /**
      * Checks to see if the user has already completed this test
-     * @return boolean Returns true if test already exist
+     * @return boolean|array Returns true if test already exist
      */
     protected function anyCompleteTests()
     {
