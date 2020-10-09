@@ -12,7 +12,7 @@
         "fortawesome/font-awesome": "^4.7"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.1"
+        "phpunit/phpunit": "*"
     },
     "license": "proprietary",
     "authors": [
