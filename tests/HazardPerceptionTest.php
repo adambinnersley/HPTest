@@ -4,7 +4,7 @@ namespace HPTest\Tests;
 use DBAL\Database;
 use Configuration\Config;
 use Smarty;
-use UserAuth\User;
+use HPTest\Tests\Classes\User;
 use HPTest\HazardPerception;
 use PHPUnit\Framework\TestCase;
 
@@ -31,6 +31,8 @@ class HazardPerceptionTest extends TestCase
         $this->config = new Config($this->db);
         $this->user = new User($this->db);
         $this->hp = new HazardPerception($this->db, $this->config, new Smarty(), $this->user);
+        $this->db->truncate('hazard_clips');
+        $this->db->query(file_get_contents(dirname(__FILE__).'/sample_data/data.sql'));
     }
     
     public function tearDown() : void
@@ -41,8 +43,39 @@ class HazardPerceptionTest extends TestCase
         unset($this->user);
     }
     
-    public function testExample()
+    /**
+     * @covers HPTest\HazardPerception::__construct
+     * @covers HPTest\HazardPerception::anyCheating
+     * @covers HPTest\HazardPerception::anyCompleteTests
+     * @covers HPTest\HazardPerception::buildScoreWindow
+     * @covers HPTest\HazardPerception::buildTest
+     * @covers HPTest\HazardPerception::chooseVideos
+     * @covers HPTest\HazardPerception::clipScore
+     * @covers HPTest\HazardPerception::createHTML
+     * @covers HPTest\HazardPerception::createTest
+     * @covers HPTest\HazardPerception::currentVideoNo
+     * @covers HPTest\HazardPerception::dec
+     * @covers HPTest\HazardPerception::getImageLocation
+     * @covers HPTest\HazardPerception::getJavascriptLocation
+     * @covers HPTest\HazardPerception::getReviewFlags
+     * @covers HPTest\HazardPerception::getScript
+     * @covers HPTest\HazardPerception::getSessionInfo
+     * @covers HPTest\HazardPerception::getTestID
+     * @covers HPTest\HazardPerception::getTestType
+     * @covers HPTest\HazardPerception::getUserID
+     * @covers HPTest\HazardPerception::getUserProgress
+     * @covers HPTest\HazardPerception::getVidLocation
+     * @covers HPTest\HazardPerception::getVideo
+     * @covers HPTest\HazardPerception::getVideoInfo
+     * @covers HPTest\HazardPerception::getVideoName
+     * @covers HPTest\HazardPerception::nextVideo
+     * @covers HPTest\HazardPerception::prevVideo
+     * @covers HPTest\HazardPerception::setTestID
+     * @covers HPTest\HazardPerception::setVideos
+     */
+    public function testCreateTest()
     {
-        $this->markTestIncomplete();
+        $hpTest = $this->hp->createTest(1);
+        $this->assertStringStartsWith('<div class="row">', $hpTest);
     }
 }
