@@ -21,7 +21,7 @@ class FreeHazardPerception extends HazardPerception
         if ($this->report === false) {
             $this->chooseVideos($testNo);
         }
-        return $this->buildTest($prim, $report, $prim);
+        return $this->buildTest($prim);
     }
     
     /**

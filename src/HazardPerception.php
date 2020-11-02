@@ -8,12 +8,33 @@ use Smarty;
 
 class HazardPerception implements HPInterface
 {
+    /**
+     * @var object An instance of the Database object
+     */
     protected $db;
+    /**
+     * @var object An instance of the config object
+     */
     protected $config;
+    /**
+     * @var object An instance of the user object
+     */
     protected $user;
+    /**
+     * @var object An instance of the template object
+     */
     protected $template;
     
+    /**
+     * If the user is being cloned by an admin user
+     * @var int|false
+     */
     protected $userClone = false;
+    
+    /**
+     * If any user progress exists it will be an array else will be false
+     * @var array|false
+     */
     protected $userprogress = false;
     
     public $testID = 1;
