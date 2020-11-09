@@ -37,32 +37,88 @@ class HazardPerception implements HPInterface
      */
     protected $userprogress = false;
     
+    /**
+     * @var int This should be the test ID
+     */
     public $testID = 1;
+    /**
+     * @var int The total number of videos for the test
+     */
     public $numVideos = 14;
+    /**
+     * @var int The score needed to pass the test
+     */
     public $passmark = 44;
     
+    /**
+     * @var array The users answers as an array
+     */
     protected $userAnswers;
+    /**
+     * @var int The tests status (1 = pass, 2 = fail, 0 = incomplete)
+     */
     protected $status;
+    /**
+     * @var array The current videos array with position and video key
+     */
     protected $currentVideo = [];
     
+    /**
+     * @var string The location of the JavaScript to include in the HTML
+     */
     public $javascriptLocation = '/js/theory/';
+    /**
+     * @var string The location of the videos to include in the HTML
+     */
     public $videoLocation = '/videos/';
+    /**
+     * @var string The location of the images to include in the HTML
+     */
     public $imgLocation = '/images/';
     
+    /**
+     * @var array The video information as an array
+     */
     protected $videoInfo;
+    /**
+     * @var string The HTML string to output
+     */
     protected $videodata;
+    /**
+     * @var string The script string to include in the JavaScript 
+     */
     protected $scriptVar = 'hazupdate';
     
+    /**
+     * @var boolean If reviewing the test set report to true else if taking a test report should be false
+     */
     protected $report = true;
+    /**
+     * @var boolean To confirm that a new test should be started
+     */
     protected $confirm = false;
     
+    /**
+     * @var string The type of user to look for permission to view the test in the database
+     */
     protected $userType = 'account';
+    /**
+     * @var string The type of test being taken
+     */
     protected $testType = 'CAR';
     
+    /**
+     * @var array The database fields as an array to search for the score windows
+     */
     protected $windows = [
         1 => ['five', 'four', 'three', 'two', 'one', 'endseq', 'prehazard'],
         2 => ['ten', 'nine', 'eight', 'seven', 'six', 'endseq2', 'prehazard2']
     ];
+    
+    /**
+     * @var boolean If you want all old tests deleted when resitting a new test set to true else to save all completed tests set to false
+     */
+    protected $deleteOldTests = true;
 
     /**
      * Sets the required variables for the test to be rendered
@@ -116,7 +172,7 @@ class HazardPerception implements HPInterface
     {
         $this->setTestID($testNo);
         $this->user->checkUserAccess($testNo);
-        if (!$this->anyCompleteTests() || $this->confirm || $report === true) {
+        if (!$this->anyCompleteTests() || $this->confirm === true || $report === true || $this->deleteOldTests === false) {
             $this->report = $report;
             if ($report === false) {
                 $this->chooseVideos($testNo);
@@ -139,7 +195,7 @@ class HazardPerception implements HPInterface
         if ($this->getSessionInfo()) {
             return $this->getSessionInfo();
         }
-        $userProgress = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType()]);
+        $userProgress = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType(), 'current_test' => 1]);
         $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
         return $_SESSION['hptest'.$this->getTestID()];
     }
@@ -163,7 +219,8 @@ class HazardPerception implements HPInterface
         $videos = $this->db->selectAll($this->config->table_hazard_videos, ['hptestno' => $testNo], '*', ['hptestposition' => 'ASC']);
         if ($this->report === false) {
             unset($_SESSION['hptest'.$testNo]);
-            $this->db->delete($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()]);
+            $this->db->delete($this->config->table_hazard_progress, array_merge(['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()], ($this->deleteOldTests === true ? [] : ['status' => 0])));
+            $this->db->update($this->config->table_hazard_progress, ['current_test' => 0], ['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()]);
         }
         $this->setVideos($videos, $testNo);
     }
@@ -744,7 +801,7 @@ class HazardPerception implements HPInterface
                 $this->status = 2;
             }
             $this->getSessionInfo()['totalscore'] = $totalScore;
-            $this->addResultsToDB();
+            $this->addResultsToDB(true);
         }
         $this->template->assign('windows', $windows);
         $this->template->assign('score', $totalScore);
@@ -801,10 +858,11 @@ class HazardPerception implements HPInterface
 
     /**
      * Inserts the users results into the database
+     * @param boolean $complete If the test has been completed set to true else set to false
      */
-    protected function addResultsToDB()
+    protected function addResultsToDB($complete = false)
     {
-        $this->db->delete($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType()]); // Delete old tests
-        $this->db->insert($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status]);
+        $this->db->delete($this->config->table_hazard_progress, array_merge(['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType()], ($this->deleteOldTests === true ? [] : ['status' => 0]))); // Delete old tests
+        $this->db->insert($this->config->table_hazard_progress, array_merge(['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status], ($complete !== false ? ['current_test' => 0] : [])));
     }
 }

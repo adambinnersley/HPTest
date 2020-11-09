@@ -81,8 +81,9 @@ class FreeHazardPerception extends HazardPerception
     
     /**
      * Inserts the users results into the database
+     * @param boolean $complete If the test has been completed set to true else set to false
      */
-    protected function addResultsToDB()
+    protected function addResultsToDB($complete = false)
     {
         // Don't store the results for the free Hazard Perception Test
     }

@@ -60,6 +60,8 @@ CREATE TABLE IF NOT EXISTS `users_hazard_progress` (
   `test_type` varchar(6) NOT NULL DEFAULT 'CAR',
   `status` smallint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_test` (`user_id`,`test_id`,`test_type`),
+  KEY `user_id` (`user_id`),
+  KEY `test_id` (`test_id`),
+  KEY `test_type` (`test_type`),
   KEY `current` (`current_test`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
