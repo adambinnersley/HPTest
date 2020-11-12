@@ -220,7 +220,7 @@ class HazardPerception implements HPInterface
         if ($this->report === false) {
             unset($_SESSION['hptest'.$testNo]);
             $this->db->delete($this->config->table_hazard_progress, array_merge(['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()], ($this->deleteOldTests === true ? [] : ['status' => 0])));
-            $this->db->update($this->config->table_hazard_progress, ['current_test' => 0], ['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()]);
+            if($this->deleteOldTests !== true){$this->db->update($this->config->table_hazard_progress, ['current_test' => 0], ['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()]);}
         }
         $this->setVideos($videos, $testNo);
     }
