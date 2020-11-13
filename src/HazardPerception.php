@@ -863,6 +863,6 @@ class HazardPerception implements HPInterface
     protected function addResultsToDB($complete = false)
     {
         $this->db->delete($this->config->table_hazard_progress, array_merge(['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'test_type' => $this->getTestType()], ($this->deleteOldTests === true ? [] : ['status' => 0]))); // Delete old tests
-        $this->db->insert($this->config->table_hazard_progress, array_merge(['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status], ($complete !== false ? ['current_test' => 0] : [])));
+        $this->db->insert($this->config->table_hazard_progress, array_merge(['user_id' => $this->getUserID(), 'test_id' => $this->getTestID(), 'progress' => serialize($this->getSessionInfo()), 'test_type' => $this->getTestType(), 'status' => $this->status], ($complete !== false && $this->deleteOldTests === false ? ['current_test' => 0] : [])));
     }
 }
