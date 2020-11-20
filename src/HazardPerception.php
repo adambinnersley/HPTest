@@ -171,7 +171,7 @@ class HazardPerception implements HPInterface
     public function createTest($testNo = 1, $report = false, $prim = false)
     {
         $this->setTestID($testNo);
-        $this->user->checkUserAccess($testNo);
+        $this->user->checkUserAccess($testNo, $this->userType);
         if (!$this->anyCompleteTests() || $this->confirm === true || $report === true || $this->deleteOldTests === false) {
             $this->report = $report;
             if ($report === false) {
