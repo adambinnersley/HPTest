@@ -18,6 +18,9 @@ try{
         $("#icon").html('<img src="<?php if($imgDir){echo($imgDir);}else{echo("/images/");} ?>hloading.gif" alt="Loading" width="100" height="100" />');
         $("#video_overlay").show();
         myVideo.pause();
+        if(myVideo.currentTime >= (myVideo.duration - 1)){
+            loadVideo($(".nextvideo").attr('id'), false);
+        }
         try{
             myVideo.addEventListener('canplaythrough', function(){
                 videoReady();
