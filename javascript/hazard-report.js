@@ -209,3 +209,25 @@ function videoStarted(){
         $("#progress").slider("value", ((myVideo.currentTime / videoDuration) * 1000)); 
     }, 50);
 }
+
+function initVideo(){
+    if(myVideo.readyState !== 4){ //HAVE_ENOUGH_DATA
+        try{
+            myVideo.addEventListener('canplaythrough', videoLoaded, false);
+            myVideo.addEventListener('load', videoLoaded, false); //add load event as well to avoid errors, sometimes 'canplaythrough' won't dispatch.
+            setTimeout(function(){
+                myVideo.pause(); //block play so it buffers before playing
+            }, 1); //it needs to be after a delay otherwise it doesn't work properly.
+        }
+        catch(e){console.log(e);}
+    }else{
+        videoLoaded();//video is ready
+    }
+}
+
+$(document).ready(function(){
+    $('#video').bind('contextmenu',function(){return false;});
+    try{myVideo.load();}
+    catch(e){console.log(e);}
+    initVideo();
+});
