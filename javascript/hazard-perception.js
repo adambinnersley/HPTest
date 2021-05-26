@@ -4,6 +4,7 @@ var process = false;
 var clicks = [];
 var vidError;
 var testended = false;
+var listener;
 
 myVideo.oncanplaythrough = function(){
     if(initialLoad){
@@ -13,26 +14,20 @@ myVideo.oncanplaythrough = function(){
     }
 };
 
-try{
-    myVideo.addEventListener('waiting', function() {
-        $("#icon").html('<img src="<?php if($imgDir){echo($imgDir);}else{echo("/images/");} ?>hloading.gif" alt="Loading" width="100" height="100" />');
-        $("#video_overlay").show();
-        myVideo.pause();
-        if(myVideo.currentTime >= (myVideo.duration - 1)){
-            loadVideo($(".nextvideo").attr('id'), false);
-        }
-        try{
-            myVideo.addEventListener('canplaythrough', function(){
-                videoReady();
-            }, false);
-        }
-        catch(e){console.log(e);}
-    }, false);
-    if(navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-        videoReady();
+myVideo.addEventListener('waiting', function() {
+    $("#icon").html('<img src="<?php if($imgDir){echo($imgDir);}else{echo("/images/");} ?>hloading.gif" alt="Loading" width="100" height="100" />');
+    $("#video_overlay").show();
+    myVideo.pause();
+    if(myVideo.currentTime >= (myVideo.duration - 1)){
+        loadVideo($(".nextvideo").attr('id'), false);
     }
-}
-catch(e){console.log(e);};
+    try{
+        myVideo.addEventListener('canplaythrough', function(){
+            videoReady();
+        }, false);
+    }
+    catch(e){console.log(e);}
+}, false);
 
 $('#exittest').click(function(){
     myVideo.pause();
@@ -108,8 +103,6 @@ function videoLoaded(){
 
 function loadVideo(videoid, skipped){
     testended = true;
-    makeVideoPlayableInline = null;
-    delete makeVideoPlayableInline;
     if(videoid === 'none'){
         if(skipped === true){
             $.get('<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&skipped=true&skipid=' + $(".videoid").attr('id'), function(){endTest();});
@@ -121,6 +114,7 @@ function loadVideo(videoid, skipped){
     else{
         //if(skipped === true){var extra = '&skipped=true&skipid=' + $(".videoid").attr('id');}else{var extra = '';}
         //$.get('<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&video=' + videoid + extra, function(data){
+            clearInterval(listener);
             window.location = '<?php echo($location); ?>?test=' + $("#question-content").attr("data-test") + '&video=' + videoid + '&continue=true#content';
             /*data = $.parseJSON(data);
             $("#question").html(data.html);
@@ -132,6 +126,7 @@ function loadVideo(videoid, skipped){
 function endTest(){
     testended = true;
     $.get('<?php echo($page); ?>?testid=' + $("#question-content").attr("data-test") + '&endtest=true', function(){
+        clearInterval(listener);
         window.location = '<?php echo($location); ?>?report=true&id=' + $("#question-content").attr("data-test");
     });
 }
@@ -221,10 +216,10 @@ function onCanPlay(){
     videoReady();
 }
 
-setInterval(function(){
+listener = setInterval(function(){
     //if(myVideo.buffered.length > 0){$("#loadingStatus").html(parseInt(((myVideo.buffered.end(0) / myVideo.duration) * 100)) + '%');}
     if(navigator.userAgent.match(/(iPod|iPhone|iPad)/)){
-        if(myVideo.currentTime >= (myVideo.duration - 0.2)){
+        if((myVideo.currentTime >= (myVideo.duration - 0.6)) && myVideo.paused || myVideo.waiting){
             loadVideo($(".nextvideo").attr('id'), false);
         }
     }
