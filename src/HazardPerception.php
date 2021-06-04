@@ -108,6 +108,11 @@ class HazardPerception implements HPInterface
     protected $testType = 'CAR';
     
     /**
+     * @var mixed The value to append to after the script URL 
+     */
+    public $scriptVersion = '1';
+    
+    /**
      * @var array The database fields as an array to search for the score windows
      */
     protected $windows = [
@@ -475,9 +480,9 @@ class HazardPerception implements HPInterface
     protected function getScript()
     {
         if ($this->report === false) {
-            return $this->getJavascriptLocation().'hazard-perception-'.$this->scriptVar.'.js';
+            return $this->getJavascriptLocation().'hazard-perception-'.$this->scriptVar.'.js?v='.$this->scriptVersion;
         }
-        return $this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js';
+        return $this->getJavascriptLocation().'hazard-report-'.$this->scriptVar.'.js?v='.$this->scriptVersion;
     }
     
     /**

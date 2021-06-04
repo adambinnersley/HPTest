@@ -5,6 +5,7 @@ var clicks = [];
 var vidError;
 var testended = false;
 var listener;
+var loadDelay;
 
 myVideo.oncanplaythrough = function(){
     if(initialLoad){
@@ -83,19 +84,26 @@ function playVideo(){
     myVideo.play();
 }
 
-function videoReady(){
-    initialLoad = false;
-    myVideo.pause();
-    $("#flags").empty();
-    $("#video_overlay").addClass('vidready');
-    $("#icon").html('Click to start');
+function videoReady(delay = false){
+    if(delay === true && initialLoad === true){
+        setTimeout(() => videoReady(false), 2500);
+    }
+    else{
+		if(initialLoad === true){
+			myVideo.pause();
+			initialLoad = false;
+		}
+        $("#flags").empty();
+        $("#video_overlay").addClass('vidready');
+        $("#icon").html('Click to start');
+    }
 }
 
 function videoLoaded(){
     myVideo.pause();
     try{
         video.addEventListener("canplaythrough", function(){
-            videoReady();
+            videoReady(true);
         });
     }
     catch(e){console.log(e);};
@@ -205,7 +213,7 @@ function initVideo(){
         }
         catch(e){console.log(e);}
     }else{
-        videoReady();//video is ready
+        videoReady(true);//video is ready
     }
 }
  
@@ -213,7 +221,7 @@ function onCanPlay(){
     myVideo.removeEventListener('canplaythrough', onCanPlay, false);
     myVideo.removeEventListener('load', onCanPlay, false);
     //video is ready
-    videoReady();
+    videoReady(true);
 }
 
 listener = setInterval(function(){
