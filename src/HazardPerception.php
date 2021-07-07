@@ -200,7 +200,7 @@ class HazardPerception implements HPInterface
         if ($this->getSessionInfo()) {
             return $this->getSessionInfo();
         }
-        $userProgress = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType(), 'current_test' => 1]);
+        $userProgress = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testID, 'test_type' => $this->getTestType(), 'current_test' => 1], '*', [], false);
         $_SESSION['hptest'.$this->getTestID()] = unserialize(stripslashes($userProgress['progress']));
         return $_SESSION['hptest'.$this->getTestID()];
     }
@@ -610,7 +610,7 @@ class HazardPerception implements HPInterface
      */
     protected function anyCompleteTests()
     {
-        return $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()]);
+        return $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $this->testID, 'test_type' => $this->getTestType()], '*', [], false);
     }
     
     /**

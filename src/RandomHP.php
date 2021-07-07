@@ -11,7 +11,7 @@ class RandomHP extends HazardPerception
      */
     protected function chooseVideos($testNo = 100)
     {
-        $videos = $this->db->selectAll($this->config->table_hazard_videos, [], '*', 'RAND()', 14);
+        $videos = $this->db->selectAll($this->config->table_hazard_videos, [], '*', 'RAND()', 14, false);
         if ($this->report === false) {
             unset($_SESSION['hptest'.$testNo]);
             $this->db->delete($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $testNo, 'test_type' => $this->getTestType()]);

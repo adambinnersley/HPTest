@@ -81,7 +81,7 @@ class HPReview
      */
     public function testsPassed()
     {
-        return $this->db->count($this->config->table_hazard_progress, ['status' => 1, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)]);
+        return $this->db->count($this->config->table_hazard_progress, ['status' => 1, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)], false);
     }
     
     /**
@@ -90,7 +90,7 @@ class HPReview
      */
     public function testsFailed()
     {
-        return $this->db->count($this->config->table_hazard_progress, ['status' => 2, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)]);
+        return $this->db->count($this->config->table_hazard_progress, ['status' => 2, 'user_id' => $this->getUserID(), 'test_type' => strtoupper($this->testType)], false);
     }
     
     /**
@@ -102,7 +102,7 @@ class HPReview
         $answers = [];
         for ($i = 1; $i <= $this->numberOfHPTests(); $i++) {
             unset($_SESSION['hptest'.$i]);
-            $info = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $i, 'test_type' => strtoupper($this->testType)], ['status', 'progress']);
+            $info = $this->db->select($this->config->table_hazard_progress, ['user_id' => $this->getUserID(), 'test_id' => $i, 'test_type' => strtoupper($this->testType)], ['status', 'progress'], [], false);
             if (is_array($info)) {
                 $answers[$i]['status'] = $info['status'];
                 $userprogress = unserialize(stripslashes($info['progress']));
